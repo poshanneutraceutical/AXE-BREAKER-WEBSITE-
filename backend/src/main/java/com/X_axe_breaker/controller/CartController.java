@@ -3,8 +3,11 @@ package com.X_axe_breaker.controller;
 import com.X_axe_breaker.dto.AddToCartRequest;
 import com.X_axe_breaker.dto.CartDTO;
 import com.X_axe_breaker.service.CartService;
+
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,17 +16,22 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class CartController {
 
+
     private final CartService cartService;
 
 
-    /**
-     * Add product to cart
+    /*
+     * ============================================================
+     * ADD TO CART
+     * ============================================================
      *
-     * Request:
+     * Example:
+     *
      * {
      *   "customerId": "123",
-     *   "productId": 1,
-     *   "quantity": 2
+     *   "productId": 5,
+     *   "flavourId": 5,
+     *   "quantity": 1
      * }
      */
     @PostMapping("/add")
@@ -34,57 +42,80 @@ public class CartController {
     }
 
 
-
-    /**
-     * Get customer cart
-     *
-     * Response includes:
-     * - Product id
-     * - Product name
-     * - Product price
-     * - Quantity
-     * - Subtotal
-     *
-     * Images are loaded from frontend product.ts
+    /*
+     * ============================================================
+     * GET CART
+     * ============================================================
      */
     @GetMapping("/{customerId}")
     public CartDTO getCart(
             @PathVariable String customerId) {
 
-        return cartService.getCart(customerId);
+        return cartService.getCart(
+                customerId
+        );
     }
 
 
-
-    /**
-     * Update product quantity
+    /*
+     * ============================================================
+     * UPDATE QUANTITY
+     * ============================================================
+     *
+     * flavourId is optional.
+     *
+     * Normal product:
+     *
+     * ?quantity=2
+     *
+     * Variant product:
+     *
+     * ?quantity=2&flavourId=5
      */
     @PutMapping("/{customerId}/{productId}")
     public CartDTO updateQuantity(
+
             @PathVariable String customerId,
+
             @PathVariable Long productId,
-            @RequestParam Integer quantity) {
+
+            @RequestParam Integer quantity,
+
+            @RequestParam(
+                    required = false
+            )
+            Long flavourId) {
 
         return cartService.updateQuantity(
                 customerId,
                 productId,
+                flavourId,
                 quantity
         );
     }
 
 
-
-    /**
-     * Remove product from cart
+    /*
+     * ============================================================
+     * REMOVE PRODUCT
+     * ============================================================
      */
     @DeleteMapping("/{customerId}/{productId}")
     public CartDTO removeFromCart(
+
             @PathVariable String customerId,
-            @PathVariable Long productId) {
+
+            @PathVariable Long productId,
+
+            @RequestParam(
+                    required = false
+            )
+            Long flavourId) {
 
         return cartService.removeFromCart(
                 customerId,
-                productId
+                productId,
+                flavourId
         );
     }
 }

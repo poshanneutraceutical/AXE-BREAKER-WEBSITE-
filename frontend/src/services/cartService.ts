@@ -4,17 +4,23 @@ import axios from "axios";
 const API = "/api/cart";
 
 
-
 export interface AddToCartRequest {
 
     customerId: string;
 
     productId: number;
 
+    /*
+     * Selected ProductFlavour / variant.
+     *
+     * Optional because normal products do not
+     * have variants.
+     */
+    flavourId?: number;
+
     quantity: number;
 
 }
-
 
 
 export interface CartItem {
@@ -23,8 +29,26 @@ export interface CartItem {
 
     productName: string;
 
-    imageUrl: string;
+    imageUrl?: string;
 
+    /*
+     * Selected flavour variant ID.
+     */
+    flavourId?: number | null;
+
+    /*
+     * Selected flavour name.
+     */
+    flavourName?: string | null;
+
+    /*
+     * Selected weight.
+     */
+    weight?: string | null;
+
+    /*
+     * Exact price of this cart item.
+     */
     price: number;
 
     quantity: number;
@@ -32,7 +56,6 @@ export interface CartItem {
     subtotal: number;
 
 }
-
 
 
 export interface Cart {
@@ -48,14 +71,12 @@ export interface Cart {
 }
 
 
-
-
-
 export const cartService = {
 
 
-
+    // ============================================================
     // Add Product To Cart
+    // ============================================================
     addToCart: async (
         data: AddToCartRequest
     ): Promise<Cart> => {
@@ -73,10 +94,9 @@ export const cartService = {
     },
 
 
-
-
-
+    // ============================================================
     // Get Customer Cart
+    // ============================================================
     getCart: async (
         customerId: string
     ): Promise<Cart> => {
@@ -93,10 +113,9 @@ export const cartService = {
     },
 
 
-
-
-
+    // ============================================================
     // Update Quantity
+    // ============================================================
     updateQuantity: async (
 
         customerId: string,
@@ -129,10 +148,9 @@ export const cartService = {
     },
 
 
-
-
-
+    // ============================================================
     // Remove Product
+    // ============================================================
     removeItem: async (
 
         customerId: string,
@@ -155,11 +173,9 @@ export const cartService = {
     },
 
 
-
-
-
-    // Optional clear cart support
-    // Add backend endpoint later if required
+    // ============================================================
+    // Clear Cart
+    // ============================================================
     clearCart: async (
         customerId: string
     ): Promise<void> => {
@@ -170,7 +186,5 @@ export const cartService = {
         );
 
     }
-
-
 
 };

@@ -1,6 +1,5 @@
 package com.X_axe_breaker.entity;
 
-import com.X_axe_breaker.entity.Cart;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,25 +19,78 @@ public class CartItem {
     private Long id;
 
 
-    // Parent Cart
+    /*
+     * ============================================================
+     * PARENT CART
+     * ============================================================
+     */
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
 
-    // Product reference
-    // Product name and price are fetched from products table
-    // Images are handled by frontend using product id
+    /*
+     * ============================================================
+     * PRODUCT
+     * ============================================================
+     *
+     * Parent product.
+     *
+     * Example:
+     * Protein Matrix-ISO
+     */
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
-    private com.X_axe_breaker.entity.Product product;
+    private Product product;
 
+
+    /*
+     * ============================================================
+     * PRODUCT FLAVOUR / VARIANT
+     * ============================================================
+     *
+     * Optional.
+     *
+     * Normal products:
+     *     flavour = null
+     *
+     * Protein variant:
+     *     flavour = selected ProductFlavour
+     *
+     * This allows different variants of the same product
+     * to exist as separate cart items.
+     */
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "flavour_id")
+    private ProductFlavour flavour;
+
+
+    /*
+     * ============================================================
+     * QUANTITY
+     * ============================================================
+     */
 
     @Column(nullable = false)
     private Integer quantity;
 
 
-    // quantity * product price
+    /*
+     * ============================================================
+     * SUBTOTAL
+     * ============================================================
+     *
+     * quantity × selected variant price
+     *
+     * OR
+     *
+     * quantity × parent product price
+     */
+
     @Column(nullable = false)
     private BigDecimal subtotal;
+
 }

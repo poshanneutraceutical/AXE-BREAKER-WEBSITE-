@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
@@ -13,7 +13,6 @@ export default function ProductCarousel({
   productName,
 }: ProductCarouselProps) {
   const [current, setCurrent] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
 
   const prev = () => {
     setCurrent((prevIndex) =>
@@ -27,22 +26,15 @@ export default function ProductCarousel({
     );
   };
 
-  // Auto Slide
-  useEffect(() => {
-    if (images.length <= 1 || isHovered) return;
-
-    const interval = setInterval(() => {
-      next();
-    }, 3500);
-
-    return () => clearInterval(interval);
-  }, [current, isHovered, images.length]);
-
   return (
     <div
-      className="relative w-full aspect-square overflow-hidden bg-[#1a1a1a]"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="
+        relative
+        w-full
+        aspect-square
+        overflow-hidden
+        bg-[#1a1a1a]
+      "
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -74,15 +66,42 @@ export default function ProductCarousel({
       {images.length > 1 && (
         <>
           <button
+            type="button"
             onClick={prev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white w-10 h-10 rounded-full"
+            className="
+              absolute
+              left-3
+              top-1/2
+              -translate-y-1/2
+              z-30
+              bg-black/50
+              hover:bg-black/70
+              text-white
+              w-10
+              h-10
+              rounded-full
+            "
           >
             ❮
           </button>
 
+          {/* Right Arrow */}
           <button
+            type="button"
             onClick={next}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white w-10 h-10 rounded-full"
+            className="
+              absolute
+              right-3
+              top-1/2
+              -translate-y-1/2
+              z-30
+              bg-black/50
+              hover:bg-black/70
+              text-white
+              w-10
+              h-10
+              rounded-full
+            "
           >
             ❯
           </button>
@@ -90,21 +109,46 @@ export default function ProductCarousel({
       )}
 
       {/* Gradient */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          bg-gradient-to-t
+          from-black/40
+          via-transparent
+          to-transparent
+        "
+      />
 
       {/* Dots */}
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+        <div
+          className="
+            absolute
+            bottom-4
+            left-1/2
+            -translate-x-1/2
+            flex
+            gap-2
+            z-30
+          "
+        >
           {images.map((_, index) => (
             <button
               key={index}
               type="button"
               onClick={() => setCurrent(index)}
-              className={`rounded-full transition-all duration-300 ${
-                current === index
-                  ? "w-6 h-2 bg-red-600"
-                  : "w-2 h-2 bg-white/60 hover:bg-white"
-              }`}
+              className={`
+                rounded-full
+                transition-all
+                duration-300
+                ${
+                  current === index
+                    ? "w-6 h-2 bg-red-600"
+                    : "w-2 h-2 bg-white/60 hover:bg-white"
+                }
+              `}
             />
           ))}
         </div>

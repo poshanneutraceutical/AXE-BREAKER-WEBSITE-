@@ -1,7 +1,7 @@
 package com.X_axe_breaker.dto;
 
 import lombok.*;
-
+import java.util.List;
 import java.math.BigDecimal;
 
 @Getter
@@ -26,4 +26,6 @@ public class ProductDTO {
     private Boolean featured;
 
     private Boolean inStock;
+
+    private List<ProductFlavourDTO> flavours;
 }

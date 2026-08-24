@@ -1,7 +1,9 @@
 package com.X_axe_breaker.service;
 
 import com.X_axe_breaker.dto.ProductDTO;
+import com.X_axe_breaker.dto.ProductFlavourDTO;
 import com.X_axe_breaker.entity.Product;
+import com.X_axe_breaker.entity.ProductFlavour;
 import com.X_axe_breaker.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class ProductService {
     private final ProductRepository productRepository;
 
 
+    /*
+     * Get all products.
+     */
     public List<ProductDTO> getAllProducts() {
 
         return productRepository.findAllOrdered()
@@ -25,35 +30,40 @@ public class ProductService {
     }
 
 
-
+    /*
+     * Get a single product by ID.
+     */
     public ProductDTO getProductById(Long id) {
 
-        Product p = productRepository.findById(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "Product not found: " + id
                         ));
 
-        return toDTO(p);
+        return toDTO(product);
     }
 
 
-
+    /*
+     * Create product.
+     */
     public ProductDTO createProduct(ProductDTO dto) {
 
-        Product p = toEntity(dto);
+        Product product = toEntity(dto);
 
-        Product saved = productRepository.save(p);
+        Product saved = productRepository.save(product);
 
         return toDTO(saved);
     }
 
 
-
+    /*
+     * Update product.
+     */
     public ProductDTO updateProduct(
             Long id,
             ProductDTO dto) {
-
 
         Product existing = productRepository.findById(id)
                 .orElseThrow(() ->
@@ -61,21 +71,29 @@ public class ProductService {
                                 "Product not found: " + id
                         ));
 
-
         existing.setName(dto.getName());
 
         existing.setPrice(dto.getPrice());
 
-        existing.setDescription(dto.getDescription());
+        existing.setDescription(
+                dto.getDescription()
+        );
 
-        existing.setCategory(dto.getCategory());
+        existing.setCategory(
+                dto.getCategory()
+        );
 
-        existing.setBadge(dto.getBadge());
+        existing.setBadge(
+                dto.getBadge()
+        );
 
-        existing.setFeatured(dto.getFeatured());
+        existing.setFeatured(
+                dto.getFeatured()
+        );
 
-        existing.setInStock(dto.getInStock());
-
+        existing.setInStock(
+                dto.getInStock()
+        );
 
         return toDTO(
                 productRepository.save(existing)
@@ -83,58 +101,148 @@ public class ProductService {
     }
 
 
-
-
+    /*
+     * Delete product.
+     */
     public void deleteProduct(Long id) {
 
         productRepository.deleteById(id);
-
     }
 
 
+    /*
+     * Convert Product Entity -> Product DTO.
+     *
+     * Important:
+     *
+     * Every flavour now contains:
+     *
+     * - flavourName
+     * - weight
+     * - price
+     * - description
+     * - images[]
+     * - inStock
+     */
+    private ProductDTO toDTO(Product product) {
 
+        List<ProductFlavourDTO> flavours =
+                product.getFlavours()
+                        .stream()
+                        .map(this::toFlavourDTO)
+                        .collect(Collectors.toList());
 
-
-    private ProductDTO toDTO(Product p) {
 
         return ProductDTO.builder()
 
-                .id(p.getId())
+                .id(product.getId())
 
-                .name(p.getName())
+                .name(product.getName())
 
-                .price(p.getPrice())
+                .price(product.getPrice())
 
-                .description(p.getDescription())
+                .description(
+                        product.getDescription()
+                )
 
-                .category(p.getCategory())
+                .category(
+                        product.getCategory()
+                )
 
-                .badge(p.getBadge())
+                .badge(
+                        product.getBadge()
+                )
 
-                .featured(p.getFeatured())
+                .featured(
+                        product.getFeatured()
+                )
 
-                .inStock(p.getInStock())
+                .inStock(
+                        product.getInStock()
+                )
+
+                .flavours(
+                        flavours
+                )
 
                 .build();
     }
 
 
+    /*
+     * Convert ProductFlavour Entity -> DTO.
+     */
+    private ProductFlavourDTO toFlavourDTO(
+            ProductFlavour flavour) {
+
+        return ProductFlavourDTO.builder()
+
+                .id(
+                        flavour.getId()
+                )
+
+                .flavourName(
+                        flavour.getFlavourName()
+                )
+
+                .weight(
+                        flavour.getWeight()
+                )
+
+                .price(
+                        flavour.getPrice()
+                )
+
+                .description(
+                        flavour.getDescription()
+                )
+
+                .images(
+                        flavour.getImages() != null
+                                ? List.copyOf(
+                                flavour.getImages()
+                        )
+                                : List.of()
+                )
+
+                .inStock(
+                        flavour.getInStock()
+                )
+
+                .build();
+    }
 
 
-
+    /*
+     * Convert Product DTO -> Entity.
+     *
+     * Flavours are managed through
+     * ProductFlavourService, so this method
+     * only creates the parent product.
+     */
     private Product toEntity(ProductDTO dto) {
 
         return Product.builder()
 
-                .name(dto.getName())
+                .name(
+                        dto.getName()
+                )
 
-                .price(dto.getPrice())
+                .price(
+                        dto.getPrice()
+                )
 
-                .description(dto.getDescription())
+                .description(
+                        dto.getDescription()
+                )
 
-                .category(dto.getCategory())
+                .category(
+                        dto.getCategory()
+                )
 
-                .badge(dto.getBadge())
+                .badge(
+                        dto.getBadge()
+                )
 
                 .featured(
                         dto.getFeatured() != null

@@ -1,4 +1,5 @@
 import { getCustomerId } from "../utils/customer";
+
 import React, {
     createContext,
     useContext,
@@ -21,7 +22,8 @@ interface CartContextType {
 
     addToCart: (
         productId: number,
-        quantity?: number
+        quantity?: number,
+        flavourId?: number
     ) => Promise<void>;
 
     removeItem: (
@@ -41,12 +43,14 @@ interface CartContextType {
 }
 
 
+const CartContext =
+    createContext<CartContextType | undefined>(
+        undefined
+    );
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
 
-
-const CUSTOMER_ID = getCustomerId();
-
+const CUSTOMER_ID =
+    getCustomerId();
 
 
 export const CartProvider = ({
@@ -56,21 +60,29 @@ export const CartProvider = ({
 }) => {
 
 
-    const [cart, setCart] = useState<Cart | null>(null);
-
-    const [loading, setLoading] = useState(false);
-
+    const [cart, setCart] =
+        useState<Cart | null>(null);
 
 
+    const [loading, setLoading] =
+        useState(false);
+
+
+    // ============================================================
     // Load Cart
+    // ============================================================
     const refreshCart = async () => {
 
         try {
 
             setLoading(true);
 
+
             const data =
-                await cartService.getCart(CUSTOMER_ID);
+                await cartService.getCart(
+                    CUSTOMER_ID
+                );
+
 
             setCart(data);
 
@@ -89,7 +101,6 @@ export const CartProvider = ({
     };
 
 
-
     useEffect(() => {
 
         refreshCart();
@@ -97,13 +108,13 @@ export const CartProvider = ({
     }, []);
 
 
-
-
-
+    // ============================================================
     // Add Product
+    // ============================================================
     const addToCart = async (
         productId: number,
-        quantity: number = 1
+        quantity: number = 1,
+        flavourId?: number
     ) => {
 
 
@@ -116,9 +127,20 @@ export const CartProvider = ({
             const data =
                 await cartService.addToCart({
 
-                    customerId: CUSTOMER_ID,
+                    customerId:
+                        CUSTOMER_ID,
 
                     productId,
+
+                    /*
+                     * Send selected flavour only
+                     * when one is selected.
+                     */
+                    ...(flavourId !== undefined
+                        ? {
+                            flavourId
+                        }
+                        : {}),
 
                     quantity,
 
@@ -128,23 +150,19 @@ export const CartProvider = ({
             setCart(data);
 
 
-
         } finally {
 
 
             setLoading(false);
-
 
         }
 
     };
 
 
-
-
-
-
+    // ============================================================
     // Remove Product
+    // ============================================================
     const removeItem = async (
         productId: number
     ) => {
@@ -166,23 +184,19 @@ export const CartProvider = ({
             setCart(data);
 
 
-
         } finally {
 
 
             setLoading(false);
-
 
         }
 
     };
 
 
-
-
-
-
+    // ============================================================
     // Update Quantity
+    // ============================================================
     const updateQuantity = async (
         productId: number,
         quantity: number
@@ -206,23 +220,19 @@ export const CartProvider = ({
             setCart(data);
 
 
-
         } finally {
 
 
             setLoading(false);
-
 
         }
 
     };
 
 
-
-
-
-
+    // ============================================================
     // Clear Cart
+    // ============================================================
     const clearCart = async () => {
 
 
@@ -246,23 +256,22 @@ export const CartProvider = ({
                 err
             );
 
-
         }
 
 
         setCart(null);
 
 
-        localStorage.removeItem("cart");
+        localStorage.removeItem(
+            "cart"
+        );
 
     };
 
 
-
-
-
-
+    // ============================================================
     // Cart Quantity Count
+    // ============================================================
     const cartCount =
         cart?.items?.reduce(
             (
@@ -274,10 +283,6 @@ export const CartProvider = ({
             0
 
         ) || 0;
-
-
-
-
 
 
     return (
@@ -315,15 +320,13 @@ export const CartProvider = ({
 };
 
 
-
-
-
 export const useCart = () => {
 
 
     const context =
-        useContext(CartContext);
-
+        useContext(
+            CartContext
+        );
 
 
     if (!context) {
@@ -333,7 +336,6 @@ export const useCart = () => {
         );
 
     }
-
 
 
     return context;

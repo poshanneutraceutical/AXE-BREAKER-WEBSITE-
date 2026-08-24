@@ -65,9 +65,9 @@ export default function Distributor() {
               <span className="section-label">Partnership</span>
             </div>
             <h2 className="ghost-logo-text text-5xl md:text-6xl text-white mb-6 leading-[0.9]">
-              Become A
+              DISTRIBUTOR
               <br />
-              <span className="text-[#e41e26]">Distributor</span>
+              <span className="text-[#e41e26]">APPLICATION</span>
             </h2>
             <div className="red-divider" />
             <p className="text-white/60 text-lg leading-relaxed mb-8">
