@@ -293,3 +293,96 @@ body {
 .ticker-track:hover {
   animation-play-state: paused;
 }
+/* =========================================================
+   RESPONSIVE MOBILE SAFETY
+   ========================================================= */
+
+/*
+ * Prevent media elements from creating horizontal overflow.
+ */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+
+/*
+ * Prevent form controls from becoming wider
+ * than their parent container.
+ */
+input,
+textarea,
+select,
+button {
+  max-width: 100%;
+}
+
+
+/*
+ * Allow grid/flex children to shrink correctly.
+ *
+ * Without min-width: 0, long text or form elements
+ * can force a grid/flex container wider than the
+ * mobile viewport.
+ */
+.min-w-0 {
+  min-width: 0;
+}
+
+
+/*
+ * Mobile viewport safety.
+ */
+@media (max-width: 767px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /*
+   * Prevent long words / URLs from breaking
+   * the mobile layout.
+   */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  a,
+  label {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  /*
+   * Make sure form controls respect their container.
+   */
+  input,
+  textarea,
+  select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /*
+   * Prevent buttons and links from becoming
+   * wider than the viewport.
+   */
+  button,
+  a {
+    max-width: 100%;
+  }
+}
