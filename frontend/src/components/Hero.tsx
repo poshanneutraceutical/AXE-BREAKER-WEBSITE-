@@ -12,11 +12,15 @@ export default function Hero() {
         justify-center
         overflow-hidden
         noise-overlay
+
+        max-md:items-start
+        max-md:justify-start
       "
     >
+
       {/* =====================================================
           BACKGROUND IMAGE
-          ===================================================== */}
+      ====================================================== */}
       <div className="absolute inset-0 z-0 overflow-hidden">
 
         <img
@@ -25,29 +29,29 @@ export default function Hero() {
           className="
             absolute
 
-            /* ================= DESKTOP ================= */
             right-0
             top-[100px]
             w-[68%]
             h-[calc(100%-100px)]
+
             object-contain
             object-right-bottom
 
             /* ================= MOBILE ================= */
-            max-md:top-[60px]
-            max-md:right-0
-            max-md:w-full
-            max-md:h-[58%]
-            max-md:object-contain
-            max-md:object-center-top
-            max-md:opacity-70
 
-            sm:max-md:w-[96%]
-            sm:max-md:right-[2%]
+            max-md:top-[70px]
+            max-md:right-[-8%]
+            max-md:w-[100%]
+            max-md:h-[52%]
+            max-md:object-contain
+            max-md:object-right-top
+
+            sm:max-md:right-[-5%]
+            sm:max-md:w-[92%]
           "
         />
 
-        {/* General dark overlay */}
+        {/* Overall dark overlay */}
         <div
           className="
             absolute
@@ -60,7 +64,7 @@ export default function Hero() {
           "
         />
 
-        {/* Desktop left-side darkening */}
+        {/* Desktop left darkening */}
         <div
           className="
             absolute
@@ -73,7 +77,7 @@ export default function Hero() {
           "
         />
 
-        {/* Mobile dark overlay */}
+        {/* Mobile darkening */}
         <div
           className="
             absolute
@@ -81,32 +85,20 @@ export default function Hero() {
             hidden
             max-md:block
             bg-gradient-to-b
-            from-black/20
-            via-black/35
-            to-black/95
+            from-black/10
+            via-transparent
+            to-black/90
             pointer-events-none
           "
         />
 
-        {/* Mobile left-side darkening */}
-        <div
-          className="
-            absolute
-            inset-0
-            hidden
-            max-md:block
-            bg-gradient-to-r
-            from-black/60
-            via-black/20
-            to-transparent
-            pointer-events-none
-          "
-        />
       </div>
 
+
       {/* =====================================================
-          DIAGONAL RED ACCENTS
-          ===================================================== */}
+          DIAGONAL RED STRIPES
+      ====================================================== */}
+
       <div
         className="
           absolute
@@ -117,7 +109,7 @@ export default function Hero() {
           bg-[#e41e26]
           rotate-[-45deg]
           opacity-60
-          pointer-events-none
+          z-[1]
         "
       />
 
@@ -131,13 +123,15 @@ export default function Hero() {
           bg-[#e41e26]
           rotate-[-45deg]
           opacity-40
-          pointer-events-none
+          z-[1]
         "
       />
 
+
       {/* =====================================================
-          MAIN CONTENT
-          ===================================================== */}
+          HERO CONTENT
+      ====================================================== */}
+
       <div
         className="
           relative
@@ -149,16 +143,24 @@ export default function Hero() {
           pt-20
           pb-24
 
-          /* MOBILE */
-          max-md:pt-5
+          /* ================= MOBILE ================= */
+
+          max-md:pt-[105px]
           max-md:pb-16
         "
       >
-        <div className="max-w-3xl min-w-0">
+
+        <div
+          className="
+            max-w-3xl
+            min-w-0
+          "
+        >
 
           {/* =================================================
               SECTION LABEL
-              ================================================= */}
+          ================================================= */}
+
           <div
             className="
               flex
@@ -167,10 +169,10 @@ export default function Hero() {
               mb-6
               animate-fadeInLeft
 
-              max-md:gap-2
               max-md:mb-4
             "
           >
+
             <div
               className="
                 w-10
@@ -178,47 +180,51 @@ export default function Hero() {
                 bg-[#e41e26]
                 shrink-0
 
-                max-md:w-7
+                max-md:w-8
               "
             />
 
-            <span
-              className="
-                section-label
-
-                max-md:text-[0.55rem]
-                max-md:tracking-[0.22em]
-              "
-            >
+            <span className="section-label">
               Premium Sports Nutrition
             </span>
+
           </div>
 
+
           {/* =================================================
-              MAIN TITLE
-              ================================================= */}
+              MAIN HEADING
+          ================================================= */}
+
           <h1
             className="
               hero-title-text
+
               text-5xl
               md:text-7xl
               lg:text-8xl
+
               leading-[0.78]
               mb-4
+
               font-black
               uppercase
+
               tracking-[-0.04em]
+
               max-w-[650px]
+
               animate-fadeInUp
               delay-100
 
-              /* MOBILE */
-              max-md:text-[2.15rem]
+              /* ================= MOBILE ================= */
+
+              max-md:text-[2.65rem]
               max-md:leading-[0.82]
               max-md:max-w-full
               max-md:mb-3
             "
           >
+
             <span
               className="
                 block
@@ -238,75 +244,98 @@ export default function Hero() {
             >
               EVERYDAY.
             </span>
+
           </h1>
+
 
           {/* =================================================
               TAGLINE
-              ================================================= */}
+          ================================================= */}
+
           <p
             className="
               text-white
               font-black
               uppercase
+
               tracking-[0.25em]
+
               text-sm
               md:text-base
+
               mb-4
 
-              max-md:text-[0.62rem]
-              max-md:tracking-[0.14em]
+              /* ================= MOBILE ================= */
+
+              max-md:text-xs
+              max-md:tracking-[0.18em]
               max-md:mb-3
             "
           >
             FUEL. FOCUS. DOMINATE.
           </p>
 
+
           {/* =================================================
               DESCRIPTION
-              ================================================= */}
+          ================================================= */}
+
           <p
             className="
               text-white/70
+
               text-lg
               md:text-xl
+
               max-w-xl
+
               mb-10
+
               leading-relaxed
+
               animate-fadeInUp
               delay-200
 
-              /* MOBILE */
-              max-md:text-[0.82rem]
-              max-md:leading-[1.55]
+              /* ================= MOBILE ================= */
+
+              max-md:text-base
+              max-md:leading-relaxed
               max-md:max-w-[95%]
-              max-md:mb-6
+              max-md:mb-7
             "
           >
             Engineered for those who refuse to be ordinary. Axe Breaker
-            delivers uncompromising, pharmaceutical-grade supplementation—
-            precision-formulated to fuel relentless intensity, sharpen
-            performance, and push you beyond every limit.
+            delivers uncompromising, pharmaceutical-grade
+            supplementation—precision-formulated to fuel relentless
+            intensity, sharpen performance, and push you beyond every
+            limit.
           </p>
+
 
           {/* =================================================
               BUTTONS
-              ================================================= */}
+          ================================================= */}
+
           <div
             className="
               flex
               flex-wrap
               gap-4
+
               animate-fadeInUp
               delay-300
 
-              /* MOBILE */
+              /* ================= MOBILE ================= */
+
               max-md:flex-col
               max-md:items-stretch
               max-md:w-full
-              max-md:max-w-[280px]
+              max-md:max-w-[470px]
               max-md:gap-3
             "
           >
+
+            {/* Explore Arsenal */}
             <a
               href="#arsenal"
               className="
@@ -314,19 +343,15 @@ export default function Hero() {
 
                 max-md:w-full
                 max-md:justify-center
-                max-md:py-[0.6rem]
-                max-md:px-4
-                max-md:text-[0.72rem]
               "
             >
               Explore Arsenal
 
-              <ArrowRight
-                size={16}
-                className="max-md:w-[14px] max-md:h-[14px]"
-              />
+              <ArrowRight size={16} />
             </a>
 
+
+            {/* Our Story */}
             <a
               href="#story"
               className="
@@ -334,34 +359,39 @@ export default function Hero() {
 
                 max-md:w-full
                 max-md:justify-center
-                max-md:py-[0.6rem]
-                max-md:px-4
-                max-md:text-[0.72rem]
               "
             >
               Our Story
             </a>
+
           </div>
+
 
           {/* =================================================
               STATS
-              ================================================= */}
+          ================================================= */}
+
           <div
             className="
               grid
               grid-cols-3
+
               gap-8
+
               mt-16
+
               max-w-lg
+
               animate-fadeInUp
               delay-500
 
-              /* MOBILE */
-              max-md:gap-3
-              max-md:mt-8
-              max-md:max-w-[300px]
+              /* ================= MOBILE ================= */
+
+              max-md:gap-4
+              max-md:mt-10
             "
           >
+
             {[
               {
                 num: '50K+',
@@ -375,78 +405,104 @@ export default function Hero() {
                 num: '24',
                 label: 'Cities Served',
               },
-            ].map((stat) => (
+            ].map((s) => (
+
               <div
-                key={stat.label}
+                key={s.label}
                 className="min-w-0"
               >
+
+                {/* Number */}
                 <div
                   className="
                     ghost-logo-text
+
                     text-3xl
                     md:text-4xl
+
                     text-white
 
-                    max-md:text-[1.35rem]
+                    max-md:text-2xl
                   "
                 >
-                  {stat.num}
+                  {s.num}
                 </div>
 
+
+                {/* Label */}
                 <div
                   className="
                     text-[0.65rem]
+
                     tracking-[0.2em]
+
                     text-white/40
+
                     uppercase
+
                     mt-1
+
                     font-display
 
-                    max-md:text-[0.42rem]
-                    max-md:tracking-[0.08em]
-                    max-md:leading-tight
+                    max-md:text-[0.52rem]
+                    max-md:tracking-[0.12em]
                   "
                 >
-                  {stat.label}
+                  {s.label}
                 </div>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </div>
+
 
       {/* =====================================================
           SCROLL INDICATOR
-          ===================================================== */}
+      ====================================================== */}
+
       <a
         href="#arsenal"
         className="
           absolute
+
           bottom-8
           left-1/2
+
           -translate-x-1/2
+
           z-10
+
           flex
           flex-col
           items-center
+
           gap-2
+
           text-white/40
+
           hover:text-white
+
           transition-colors
 
-          max-md:bottom-3
-          max-md:gap-1
+          max-md:bottom-4
         "
       >
+
         <span
           className="
             text-[0.6rem]
-            tracking-[0.3em]
-            uppercase
-            font-display
 
-            max-md:text-[0.45rem]
-            max-md:tracking-[0.2em]
+            tracking-[0.3em]
+
+            uppercase
+
+            font-display
           "
         >
           Scroll
@@ -454,13 +510,11 @@ export default function Hero() {
 
         <ChevronDown
           size={20}
-          className="
-            animate-bounce
-            max-md:w-4
-            max-md:h-4
-          "
+          className="animate-bounce"
         />
+
       </a>
+
     </section>
   );
 }
