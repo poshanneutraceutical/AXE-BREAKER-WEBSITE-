@@ -150,7 +150,7 @@ export default function Hero() {
           pb-24
 
           /* MOBILE */
-          max-md:pt-24
+          max-md:pt-[190px]
           max-md:pb-16
         "
       >
