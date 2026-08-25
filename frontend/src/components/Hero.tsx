@@ -138,8 +138,28 @@ export default function Hero() {
         href="#arsenal"
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/40 hover:text-white transition-colors"
       >
-        <span className="text-[0.6rem] tracking-[0.3em] uppercase font-display">Scroll</span>
-        <ChevronDown size={20} className="animate-bounce" />
+        <span
+          className="
+            text-[0.6rem]
+            tracking-[0.3em]
+            uppercase
+            font-display
+
+            max-md:text-[0.45rem]
+            max-md:tracking-[0.2em]
+          "
+        >
+          Scroll
+        </span>
+
+        <ChevronDown
+          size={20}
+          className="
+            animate-bounce
+            max-md:w-4
+            max-md:h-4
+          "
+        />
       </a>
     </section>
   );
