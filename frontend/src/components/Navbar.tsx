@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // <--- ADDED THIS IMPORT
+import { Link } from 'react-router-dom';
 import { Menu, X, ShoppingBag } from 'lucide-react';
 import CartIcon from '../components/CartIcon';
 
@@ -17,6 +17,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
+
     window.addEventListener('scroll', onScroll);
 
     return () => window.removeEventListener('scroll', onScroll);
@@ -31,64 +32,116 @@ export default function Navbar() {
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
+
+        {/* =========================
+            LOGO
+        ========================== */}
         <a href="#home" className="flex items-center group">
+
           <img
             src="AXE.png"
             alt="Axe Breaker"
-            style={{
-              height: "100px",
-              width: "200px",
-              transform: "translateY(-10px)",
-            }}
-            className="object-contain"
+            className="
+              object-contain
+
+              w-[200px]
+              h-[100px]
+              -translate-y-[10px]
+
+              max-md:w-[165px]
+              max-md:h-[75px]
+              max-md:-translate-y-[4px]
+            "
           />
+
         </a>
 
-        {/* Desktop Navigation */}
+        {/* =========================
+            DESKTOP NAVIGATION
+        ========================== */}
         <ul className="hidden md:flex items-center gap-8">
           {links.map((link) => (
             <li key={link.href}>
-              <a href={link.href} className="nav-link">
+              <a
+                href={link.href}
+                className="nav-link"
+              >
                 {link.label}
               </a>
             </li>
           ))}
         </ul>
 
-        {/* Desktop Right Side */}
+        {/* =========================
+            DESKTOP RIGHT SIDE
+        ========================== */}
         <div className="hidden md:flex items-center gap-4">
-          {/* NEW: Verify Product Link */}
+
+          {/* Verify Product */}
           <Link
             to="/verify"
-            className="text-sm font-semibold text-white/80 hover:text-red-500 transition-colors"
+            className="
+              text-sm
+              font-semibold
+              text-white/80
+              hover:text-red-500
+              transition-colors
+            "
           >
             Verify Product
           </Link>
 
+          {/* Cart */}
           <CartIcon />
 
+          {/* Shop Now */}
           <button className="btn-primary flex items-center gap-2">
             <ShoppingBag size={16} />
             Shop Now
           </button>
+
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* =========================
+            MOBILE MENU BUTTON
+        ========================== */}
         <button
-          className="md:hidden text-white"
+          className="
+            md:hidden
+            text-white
+            flex
+            items-center
+            justify-center
+            shrink-0
+          "
           onClick={() => setOpen(!open)}
           aria-label="Toggle Menu"
         >
-          {open ? <X size={26} /> : <Menu size={26} />}
+          {open ? (
+            <X size={26} />
+          ) : (
+            <Menu size={26} />
+          )}
         </button>
+
       </nav>
 
-      {/* Mobile Menu */}
+      {/* =========================
+          MOBILE MENU
+      ========================== */}
       {open && (
-        <div className="md:hidden bg-black/95 border-t border-white/5 animate-slideDown">
+        <div
+          className="
+            md:hidden
+            bg-black/95
+            border-t
+            border-white/5
+            animate-slideDown
+          "
+        >
           <ul className="flex flex-col px-6 py-4 gap-4">
 
+            {/* Navigation Links */}
             {links.map((link) => (
               <li key={link.href}>
                 <a
@@ -101,7 +154,7 @@ export default function Navbar() {
               </li>
             ))}
 
-            {/* NEW: Verify Product Link for Mobile */}
+            {/* Verify Product */}
             <li>
               <Link
                 to="/verify"
@@ -112,12 +165,23 @@ export default function Navbar() {
               </Link>
             </li>
 
+            {/* Cart */}
             <li className="flex justify-center py-2">
               <CartIcon />
             </li>
 
+            {/* Shop Now */}
             <li>
-              <button className="btn-primary w-full justify-center flex items-center gap-2">
+              <button
+                className="
+                  btn-primary
+                  w-full
+                  justify-center
+                  flex
+                  items-center
+                  gap-2
+                "
+              >
                 <ShoppingBag size={16} />
                 Shop Now
               </button>
