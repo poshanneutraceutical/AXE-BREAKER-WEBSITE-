@@ -13,31 +13,24 @@ export default function Hero() {
         overflow-hidden
         noise-overlay
 
+        max-md:min-h-0
         max-md:items-start
         max-md:justify-start
       "
     >
-
-      {/* =====================================================
-          BACKGROUND IMAGE
-      ====================================================== */}
+      {/* Background image */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-
         <img
-          src="/axe-background-image.png"
+          src="/WEB FRONT2.png"
           alt="Athlete training"
           className="
             absolute
-
             right-0
             top-[100px]
             w-[68%]
             h-[calc(100%-100px)]
-
             object-contain
             object-right-bottom
-
-            /* ================= MOBILE ================= */
 
             max-md:top-[70px]
             max-md:right-[-8%]
@@ -64,7 +57,7 @@ export default function Hero() {
           "
         />
 
-        {/* Desktop left darkening */}
+        {/* Darken left side so text remains readable */}
         <div
           className="
             absolute
@@ -77,7 +70,7 @@ export default function Hero() {
           "
         />
 
-        {/* Mobile darkening */}
+        {/* Additional mobile darkening */}
         <div
           className="
             absolute
@@ -91,14 +84,9 @@ export default function Hero() {
             pointer-events-none
           "
         />
-
       </div>
 
-
-      {/* =====================================================
-          DIAGONAL RED STRIPES
-      ====================================================== */}
-
+      {/* Diagonal stripe accent */}
       <div
         className="
           absolute
@@ -109,7 +97,6 @@ export default function Hero() {
           bg-[#e41e26]
           rotate-[-45deg]
           opacity-60
-          z-[1]
         "
       />
 
@@ -123,15 +110,10 @@ export default function Hero() {
           bg-[#e41e26]
           rotate-[-45deg]
           opacity-40
-          z-[1]
         "
       />
 
-
-      {/* =====================================================
-          HERO CONTENT
-      ====================================================== */}
-
+      {/* Content */}
       <div
         className="
           relative
@@ -143,88 +125,42 @@ export default function Hero() {
           pt-20
           pb-24
 
-          /* ================= MOBILE ================= */
-
           max-md:pt-[105px]
-          max-md:pb-16
+          max-md:pb-8
         "
       >
+        <div className="max-w-3xl min-w-0">
 
-        <div
-          className="
-            max-w-3xl
-            min-w-0
-          "
-        >
-
-          {/* =================================================
-              SECTION LABEL
-          ================================================= */}
-
-          <div
-            className="
-              flex
-              items-center
-              gap-3
-              mb-6
-              animate-fadeInLeft
-
-              max-md:mb-4
-            "
-          >
-
-            <div
-              className="
-                w-10
-                h-[2px]
-                bg-[#e41e26]
-                shrink-0
-
-                max-md:w-8
-              "
-            />
+          {/* Section label */}
+          <div className="flex items-center gap-3 mb-6 animate-fadeInLeft">
+            <div className="w-10 h-[2px] bg-[#e41e26] shrink-0" />
 
             <span className="section-label">
               Premium Sports Nutrition
             </span>
-
           </div>
 
-
-          {/* =================================================
-              MAIN HEADING
-          ================================================= */}
-
+          {/* Main heading */}
           <h1
             className="
               hero-title-text
-
               text-5xl
               md:text-7xl
               lg:text-8xl
-
               leading-[0.78]
               mb-4
-
               font-black
               uppercase
-
               tracking-[-0.04em]
-
               max-w-[650px]
-
               animate-fadeInUp
               delay-100
-
-              /* ================= MOBILE ================= */
 
               max-md:text-[2.65rem]
               max-md:leading-[0.82]
               max-md:max-w-full
-              max-md:mb-3
             "
           >
-
             <span
               className="
                 block
@@ -235,73 +171,45 @@ export default function Hero() {
               STRONGER
             </span>
 
-            <span
-              className="
-                text-[#e41e26]
-                red-glow-text
-                block
-              "
-            >
+            <span className="text-[#e41e26] red-glow-text block">
               EVERYDAY.
             </span>
-
           </h1>
 
-
-          {/* =================================================
-              TAGLINE
-          ================================================= */}
-
+          {/* Tagline */}
           <p
             className="
               text-white
               font-black
               uppercase
-
               tracking-[0.25em]
-
               text-sm
               md:text-base
-
               mb-4
-
-              /* ================= MOBILE ================= */
 
               max-md:text-xs
               max-md:tracking-[0.18em]
-              max-md:mb-3
             "
           >
             FUEL. FOCUS. DOMINATE.
           </p>
 
-
-          {/* =================================================
-              DESCRIPTION
-          ================================================= */}
-
+          {/* Description */}
           <p
             className="
               text-white/70
-
               text-lg
               md:text-xl
-
               max-w-xl
-
               mb-10
-
               leading-relaxed
-
               animate-fadeInUp
               delay-200
-
-              /* ================= MOBILE ================= */
 
               max-md:text-base
               max-md:leading-relaxed
               max-md:max-w-[95%]
-              max-md:mb-7
+              max-md:mb-8
             "
           >
             Engineered for those who refuse to be ordinary. Axe Breaker
@@ -311,115 +219,74 @@ export default function Hero() {
             limit.
           </p>
 
-
-          {/* =================================================
-              BUTTONS
-          ================================================= */}
-
+          {/* Buttons */}
           <div
             className="
               flex
               flex-wrap
               gap-4
-
               animate-fadeInUp
               delay-300
-
-              /* ================= MOBILE ================= */
 
               max-md:flex-col
               max-md:items-stretch
               max-md:w-full
-              max-md:max-w-[470px]
-              max-md:gap-3
             "
           >
-
-            {/* Explore Arsenal */}
             <a
               href="#arsenal"
               className="
                 btn-primary
-
                 max-md:w-full
                 max-md:justify-center
               "
             >
               Explore Arsenal
-
               <ArrowRight size={16} />
             </a>
 
-
-            {/* Our Story */}
             <a
               href="#story"
               className="
                 btn-outline
-
                 max-md:w-full
                 max-md:justify-center
               "
             >
               Our Story
             </a>
-
           </div>
 
-
-          {/* =================================================
-              STATS
-          ================================================= */}
-
+          {/* Stats */}
           <div
             className="
               grid
               grid-cols-3
-
               gap-8
-
               mt-16
-
               max-w-lg
-
               animate-fadeInUp
               delay-500
 
-              /* ================= MOBILE ================= */
-
+              max-md:grid-cols-3
               max-md:gap-4
-              max-md:mt-10
+              max-md:mt-12
             "
           >
-
             {[
-              {
-                num: '50K+',
-                label: 'Warriors Fueled',
-              },
-              {
-                num: '100%',
-                label: 'Lab Tested',
-              },
-              {
-                num: '24',
-                label: 'Cities Served',
-              },
+              { num: '50K+', label: 'Warriors Fueled' },
+              { num: '100%', label: 'Lab Tested' },
+              { num: '24', label: 'Cities Served' },
             ].map((s) => (
-
               <div
                 key={s.label}
                 className="min-w-0"
               >
-
-                {/* Number */}
                 <div
                   className="
                     ghost-logo-text
-
                     text-3xl
                     md:text-4xl
-
                     text-white
 
                     max-md:text-2xl
@@ -428,20 +295,13 @@ export default function Hero() {
                   {s.num}
                 </div>
 
-
-                {/* Label */}
                 <div
                   className="
                     text-[0.65rem]
-
                     tracking-[0.2em]
-
                     text-white/40
-
                     uppercase
-
                     mt-1
-
                     font-display
 
                     max-md:text-[0.52rem]
@@ -450,58 +310,37 @@ export default function Hero() {
                 >
                   {s.label}
                 </div>
-
               </div>
-
             ))}
-
           </div>
-
         </div>
-
       </div>
 
-
-      {/* =====================================================
-          SCROLL INDICATOR
-      ====================================================== */}
-
+      {/* Scroll indicator - desktop only */}
       <a
         href="#arsenal"
         className="
           absolute
-
           bottom-8
           left-1/2
-
           -translate-x-1/2
-
           z-10
-
           flex
           flex-col
           items-center
-
           gap-2
-
           text-white/40
-
           hover:text-white
-
           transition-colors
 
-          max-md:bottom-4
+          max-md:hidden
         "
       >
-
         <span
           className="
             text-[0.6rem]
-
             tracking-[0.3em]
-
             uppercase
-
             font-display
           "
         >
@@ -512,9 +351,7 @@ export default function Hero() {
           size={20}
           className="animate-bounce"
         />
-
       </a>
-
     </section>
   );
 }
