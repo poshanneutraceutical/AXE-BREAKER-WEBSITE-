@@ -38,7 +38,7 @@ export default function Navbar() {
             alt="Axe Breaker"
             style={{
               height: "100px",
-              width: "300px",
+              width: "200px",
               transform: "translateY(-10px)",
             }}
             className="object-contain"
