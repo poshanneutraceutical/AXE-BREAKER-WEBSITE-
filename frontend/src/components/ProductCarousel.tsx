@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
@@ -13,6 +13,22 @@ export default function ProductCarousel({
   productName,
 }: ProductCarouselProps) {
   const [current, setCurrent] = useState(0);
+
+  /*
+   * Reset carousel to the FIRST image whenever
+   * the selected product variant changes.
+   *
+   * This works for:
+   * - 1 KG → Mango
+   * - 1 KG → Chocolate
+   * - 1 KG → Coffee
+   * - 2 KG → Mango
+   * - 2 KG → Chocolate
+   * - 2 KG → Coffee
+   */
+  useEffect(() => {
+    setCurrent(0);
+  }, [images]);
 
   const prev = () => {
     setCurrent((prevIndex) =>

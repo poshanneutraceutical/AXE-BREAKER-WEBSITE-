@@ -395,9 +395,9 @@ export default function ProductQuickView({
     ) {
 
       return [
-        "/products/protein 2kg/40.png",
-        "/products/protein 2kg/41.png",
-        "/products/protein 2kg/42.png",
+        "/products/protein2kgcofees/40.png",
+        "/products/protein2kgcofees/41.png",
+        "/products/protein2kgcofees/42.png",
       ];
 
     }

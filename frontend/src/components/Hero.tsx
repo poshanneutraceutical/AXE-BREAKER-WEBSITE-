@@ -11,109 +11,61 @@ export default function Hero() {
         items-center
         justify-center
         overflow-hidden
-        noise-overlay
+        bg-[#111111]
 
         max-md:min-h-0
         max-md:items-start
         max-md:justify-start
       "
     >
-      {/* Background image */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* =====================================================
+          HERO IMAGE
+          Desktop: large image on the right
+          Mobile: centered and enlarged
+          ===================================================== */}
+      <div
+        className="
+          absolute
+          inset-0
+          z-0
+          overflow-hidden
+          pointer-events-none
+        "
+      >
         <img
-          src="/WEB FRONT2.png"
-          alt="Athlete training"
+          src="/WEB FRONT2 TRA.png"
+          alt="Axe Breaker Warriors"
           className="
             absolute
             right-0
             top-[100px]
-            w-[68%]
+            w-[73%]
             h-[calc(100%-100px)]
             object-contain
             object-right-bottom
+            brightness-150
+            contrast-110
 
             max-md:top-[70px]
-            max-md:right-[-8%]
-            max-md:w-[100%]
-            max-md:h-[52%]
+            max-md:left-1/2
+            max-md:right-auto
+            max-md:-translate-x-1/2
+            max-md:w-[115%]
+            max-md:h-auto
+            max-md:max-w-none
             max-md:object-contain
-            max-md:object-right-top
+            max-md:object-center
+            max-md:brightness-150
+            max-md:contrast-110
 
-            sm:max-md:right-[-5%]
-            sm:max-md:w-[92%]
-          "
-        />
-
-        {/* Overall dark overlay */}
-        <div
-          className="
-            absolute
-            inset-0
-            bg-gradient-to-b
-            from-black/20
-            via-black/20
-            to-black/70
-            pointer-events-none
-          "
-        />
-
-        {/* Darken left side so text remains readable */}
-        <div
-          className="
-            absolute
-            inset-0
-            bg-gradient-to-r
-            from-black
-            via-black/60
-            to-transparent
-            pointer-events-none
-          "
-        />
-
-        {/* Additional mobile darkening */}
-        <div
-          className="
-            absolute
-            inset-0
-            hidden
-            max-md:block
-            bg-gradient-to-b
-            from-black/10
-            via-transparent
-            to-black/90
-            pointer-events-none
+            sm:max-md:w-[100%]
           "
         />
       </div>
 
-      {/* Diagonal stripe accent */}
-      <div
-        className="
-          absolute
-          top-1/3
-          -right-20
-          w-80
-          h-[2px]
-          bg-[#e41e26]
-          rotate-[-45deg]
-          opacity-60
-        "
-      />
-
-      <div
-        className="
-          absolute
-          top-1/2
-          -right-10
-          w-60
-          h-[1px]
-          bg-[#e41e26]
-          rotate-[-45deg]
-          opacity-40
-        "
-      />
-
-      {/* Content */}
+      {/* =====================================================
+          CONTENT
+          ===================================================== */}
       <div
         className="
           relative
@@ -131,16 +83,35 @@ export default function Hero() {
       >
         <div className="max-w-3xl min-w-0">
 
-          {/* Section label */}
-          <div className="flex items-center gap-3 mb-6 animate-fadeInLeft">
-            <div className="w-10 h-[2px] bg-[#e41e26] shrink-0" />
+          {/* =================================================
+              SECTION LABEL
+              ================================================= */}
+          <div
+            className="
+              flex
+              items-center
+              gap-3
+              mb-6
+              animate-fadeInLeft
+            "
+          >
+            <div
+              className="
+                w-10
+                h-[2px]
+                bg-[#e41e26]
+                shrink-0
+              "
+            />
 
             <span className="section-label">
               Premium Sports Nutrition
             </span>
           </div>
 
-          {/* Main heading */}
+          {/* =================================================
+              MAIN HEADING
+              ================================================= */}
           <h1
             className="
               hero-title-text
@@ -171,12 +142,20 @@ export default function Hero() {
               STRONGER
             </span>
 
-            <span className="text-[#e41e26] red-glow-text block">
+            <span
+              className="
+                text-[#e41e26]
+                red-glow-text
+                block
+              "
+            >
               EVERYDAY.
             </span>
           </h1>
 
-          {/* Tagline */}
+          {/* =================================================
+              TAGLINE
+              ================================================= */}
           <p
             className="
               text-white
@@ -194,10 +173,14 @@ export default function Hero() {
             FUEL. FOCUS. DOMINATE.
           </p>
 
-          {/* Description */}
+          {/* =================================================
+              DESCRIPTION
+              Desktop stays subdued.
+              Mobile is brighter and stronger for readability.
+              ================================================= */}
           <p
             className="
-              text-white/70
+              text-white/60
               text-lg
               md:text-xl
               max-w-xl
@@ -206,16 +189,27 @@ export default function Hero() {
               animate-fadeInUp
               delay-200
 
-              max-md:text-base
-              max-md:leading-relaxed
+              max-md:text-white
+              max-md:text-[0.95rem]
+              max-md:font-medium
+              max-md:leading-[1.65]
               max-md:max-w-[95%]
               max-md:mb-8
+              max-md:[text-shadow:0_1px_3px_rgba(0,0,0,0.9)]
             "
           >
-            AXE BREAKER is precision-formulated for those who train harder, push further, and refuse to back down.Powered by performance-focused ingredients, it is designed to support maximum intensity, relentless energy, razor-sharp focus, endurance, and peak performance—so you can attack every set, overpower fatigue, crush every limit that hold back and dominate every session.
+            AXE BREAKER is precision-formulated for those who train harder,
+            push further, and refuse to back down. Powered by
+            performance-focused ingredients, it is designed to support
+            maximum intensity, relentless energy, razor-sharp focus,
+            endurance, and peak performance—so you can attack every set,
+            overpower fatigue, crush every limit that hold back and dominate
+            every session.
           </p>
 
-          {/* Buttons */}
+          {/* =================================================
+              BUTTONS
+              ================================================= */}
           <div
             className="
               flex
@@ -253,7 +247,9 @@ export default function Hero() {
             </a>
           </div>
 
-          {/* Stats */}
+          {/* =================================================
+              STATS
+              ================================================= */}
           <div
             className="
               grid
@@ -283,7 +279,7 @@ export default function Hero() {
                     ghost-logo-text
                     text-3xl
                     md:text-4xl
-                    text-white
+                    text-white/80
 
                     max-md:text-2xl
                   "
@@ -295,7 +291,7 @@ export default function Hero() {
                   className="
                     text-[0.65rem]
                     tracking-[0.2em]
-                    text-white/40
+                    text-white/30
                     uppercase
                     mt-1
                     font-display
@@ -312,7 +308,10 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator - desktop only */}
+      {/* =====================================================
+          SCROLL INDICATOR
+          Desktop only
+          ===================================================== */}
       <a
         href="#products"
         className="
@@ -325,7 +324,7 @@ export default function Hero() {
           flex-col
           items-center
           gap-2
-          text-white/40
+          text-white/30
           hover:text-white
           transition-colors
 

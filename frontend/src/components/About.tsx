@@ -24,16 +24,6 @@ export default function About() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
             </div>
 
-            {/* Floating badge */}
-            <div className="absolute -bottom-6 -right-6 bg-[#e41e26] p-6 red-glow hidden md:block">
-              <div className="ghost-logo-text text-4xl text-white leading-none">
-                EST.
-              </div>
-
-              <div className="ghost-logo-text text-4xl text-white leading-none">
-                2019
-              </div>
-            </div>
 
             {/* Corner accent */}
             <div className="absolute -top-4 -left-4 w-16 h-16 border-t-2 border-l-2 border-[#e41e26]" />
