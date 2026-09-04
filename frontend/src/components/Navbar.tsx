@@ -5,7 +5,7 @@ import CartIcon from '../components/CartIcon';
 
 const links = [
   { label: 'Home', href: '#home' },
-  { label: 'Arsenal', href: '#arsenal' },
+  { label: 'Products', href: '#products' },
   { label: 'Our Story', href: '#story' },
   { label: 'Distribute', href: '#distribute' },
   { label: 'Contact', href: '#contact' },
@@ -37,13 +37,11 @@ export default function Navbar() {
             LOGO
         ========================== */}
         <a href="#home" className="flex items-center group">
-
           <img
             src="AXE.png"
             alt="Axe Breaker"
             className="
               object-contain
-
               w-[200px]
               h-[100px]
               -translate-y-[10px]
@@ -53,13 +51,13 @@ export default function Navbar() {
               max-md:-translate-y-[4px]
             "
           />
-
         </a>
 
         {/* =========================
             DESKTOP NAVIGATION
         ========================== */}
         <ul className="hidden md:flex items-center gap-8">
+
           {links.map((link) => (
             <li key={link.href}>
               <a
@@ -70,6 +68,17 @@ export default function Navbar() {
               </a>
             </li>
           ))}
+
+          {/* LAB REPORTS */}
+          <li>
+            <Link
+              to="/lab-reports"
+              className="nav-link"
+            >
+              Lab Reports
+            </Link>
+          </li>
+
         </ul>
 
         {/* =========================
@@ -95,7 +104,14 @@ export default function Navbar() {
           <CartIcon />
 
           {/* Shop Now */}
-          <button className="btn-primary flex items-center gap-2">
+          <button
+            className="
+              btn-primary
+              flex
+              items-center
+              gap-2
+            "
+          >
             <ShoppingBag size={16} />
             Shop Now
           </button>
@@ -153,6 +169,17 @@ export default function Navbar() {
                 </a>
               </li>
             ))}
+
+            {/* Lab Reports */}
+            <li>
+              <Link
+                to="/lab-reports"
+                className="nav-link block py-2"
+                onClick={() => setOpen(false)}
+              >
+                Lab Reports
+              </Link>
+            </li>
 
             {/* Verify Product */}
             <li>

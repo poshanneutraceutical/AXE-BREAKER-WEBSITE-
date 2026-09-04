@@ -463,7 +463,7 @@ export default function Products() {
   return (
 
     <section
-      id="arsenal"
+      id="products"
       className="
         relative
         py-24
@@ -512,7 +512,7 @@ export default function Products() {
             />
 
             <span className="section-label">
-              The Arsenal
+              The Products
             </span>
 
             <div
@@ -541,7 +541,7 @@ export default function Products() {
             <span
               className="text-[#e41e26]"
             >
-              Arsenal
+              Products
             </span>
 
           </h2>
@@ -596,7 +596,7 @@ export default function Products() {
                 size={20}
               />
 
-              Back to Arsenal
+              Back to Products
 
             </button>
 
@@ -614,7 +614,7 @@ export default function Products() {
                 "
               >
 
-                The Arsenal
+                The Products
 
               </div>
 

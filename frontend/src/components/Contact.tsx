@@ -56,7 +56,7 @@ export default function Contact() {
               {[
                 { icon: Mail, label: 'Email', value: 'axebreakerofficial@gmail.com' },
                 { icon: Phone, label: 'Phone', value: '+91 6362302029' },
-                { icon: MapPin, label: 'Headquarters', value: 'The Commercial , #590 , 15th cross, 15C main, sector 4, HSR Layout, Banglore-560102' },
+                { icon: MapPin, label: 'Headquarters', value: 'The Commercial , #590 , 15th cross, 15 C main, sector 4, HSR Layout, Banglore-560102' },
               ].map((c) => {
                 const Icon = c.icon;
                 return (
@@ -82,13 +82,10 @@ export default function Contact() {
               </h4>
               <div className="space-y-1 text-sm text-white/50">
                 <div className="flex justify-between">
-                  <span>Mon - Fri</span>
+                  <span>Mon - Sat</span>
                   <span>10:00 AM - 6:00 PM</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Saturday</span>
-                   <span className="text-[#e41e26]">Closed</span>
-                </div>
+
                 <div className="flex justify-between">
                   <span>Sunday</span>
                   <span className="text-[#e41e26]">Closed</span>

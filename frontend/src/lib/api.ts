@@ -2,8 +2,11 @@ const API_URL =
   (import.meta.env.VITE_API_URL as string) ||
   "/api";
 
+
 /*
- * Product flavour / variant
+ * =========================================================
+ * PRODUCT FLAVOUR / VARIANT
+ * =========================================================
  *
  * Each flavour represents one specific
  * flavour + weight combination.
@@ -42,7 +45,9 @@ export type ProductFlavour = {
 
 
 /*
- * Product
+ * =========================================================
+ * PRODUCT
+ * =========================================================
  */
 export type Product = {
   id: number;
@@ -77,7 +82,9 @@ export type Product = {
 
 
 /*
- * Distributor inquiry
+ * =========================================================
+ * DISTRIBUTOR INQUIRY
+ * =========================================================
  */
 export type DistributorInquiry = {
   fullName: string;
@@ -97,7 +104,9 @@ export type DistributorInquiry = {
 
 
 /*
- * Contact message
+ * =========================================================
+ * CONTACT MESSAGE
+ * =========================================================
  */
 export type ContactMessage = {
   name: string;
@@ -111,21 +120,80 @@ export type ContactMessage = {
 
 
 /*
- * Generic API request helper
+ * =========================================================
+ * LAB REPORT
+ * =========================================================
+ */
+export type LabReport = {
+  id: number;
+
+  title: string;
+
+  productName?: string;
+
+  reportDate?: string;
+
+  fileName: string;
+
+  contentType: string;
+
+  /*
+   * Public URL used to open the PDF.
+   */
+  url: string;
+};
+
+
+/*
+ * =========================================================
+ * AUTH TOKEN
+ * =========================================================
+ *
+ * Your existing authentication system stores
+ * the JWT in localStorage under "token".
+ */
+function getAuthToken(): string {
+  return localStorage.getItem("token") || "";
+}
+
+
+/*
+ * =========================================================
+ * GENERIC API REQUEST HELPER
+ * =========================================================
  */
 async function request<T>(
   path: string,
   options?: RequestInit
 ): Promise<T> {
 
+  const token = getAuthToken();
+
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+
+
+  /*
+   * Add JWT only when it exists.
+   *
+   * This keeps public API requests working while
+   * allowing protected endpoints to authenticate.
+   */
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+
   const res = await fetch(
     `${API_URL}${path}`,
     {
-      headers: {
-        "Content-Type": "application/json",
-      },
-
       ...options,
+
+      headers: {
+        ...headers,
+        ...(options?.headers || {}),
+      },
     }
   );
 
@@ -137,6 +205,7 @@ async function request<T>(
         .text()
         .catch(() => "Request failed");
 
+
     throw new Error(
       text ||
       `Request failed (${res.status})`
@@ -144,10 +213,11 @@ async function request<T>(
   }
 
 
+  /*
+   * No content response.
+   */
   if (res.status === 204) {
-
     return undefined as T;
-
   }
 
 
@@ -156,13 +226,15 @@ async function request<T>(
 
 
 /*
+ * =========================================================
  * API
+ * =========================================================
  */
 export const api = {
 
-  // -----------------------------------------
-  // Products
-  // -----------------------------------------
+  // =======================================================
+  // PRODUCTS
+  // =======================================================
 
   getProducts: () =>
     request<Product[]>(
@@ -176,9 +248,9 @@ export const api = {
     ),
 
 
-  // -----------------------------------------
-  // Distributor
-  // -----------------------------------------
+  // =======================================================
+  // DISTRIBUTOR
+  // =======================================================
 
   submitDistributor: (
     data: DistributorInquiry
@@ -193,9 +265,9 @@ export const api = {
     ),
 
 
-  // -----------------------------------------
-  // Contact
-  // -----------------------------------------
+  // =======================================================
+  // CONTACT
+  // =======================================================
 
   submitContact: (
     data: ContactMessage
@@ -208,5 +280,170 @@ export const api = {
         body: JSON.stringify(data),
       }
     ),
+
+
+  // =======================================================
+  // LAB REPORTS
+  // =======================================================
+
+  /*
+   * Get all published lab reports.
+   *
+   * This endpoint is PUBLIC.
+   *
+   * Visitors do not need to log in to see reports.
+   */
+  getLabReports: () =>
+    request<LabReport[]>(
+      "/lab-reports"
+    ),
+
+
+  /*
+   * Upload a new laboratory report.
+   *
+   * This endpoint is PROTECTED.
+   *
+   * The JWT is sent in the Authorization header.
+   *
+   * IMPORTANT:
+   * Do NOT manually set Content-Type here.
+   *
+   * Browser automatically creates the correct
+   * multipart/form-data boundary when using FormData.
+   */
+  uploadLabReport: async (
+    title: string,
+    productName: string,
+    reportDate: string,
+    file: File
+  ): Promise<LabReport> => {
+
+    const token = getAuthToken();
+
+
+    const formData = new FormData();
+
+    formData.append(
+      "title",
+      title
+    );
+
+    formData.append(
+      "productName",
+      productName
+    );
+
+    formData.append(
+      "reportDate",
+      reportDate
+    );
+
+    formData.append(
+      "file",
+      file
+    );
+
+
+    const headers: HeadersInit = {};
+
+
+    /*
+     * Send JWT for owner/admin authentication.
+     */
+    if (token) {
+      headers["Authorization"] =
+        `Bearer ${token}`;
+    }
+
+
+    const res = await fetch(
+      `${API_URL}/lab-reports`,
+      {
+        method: "POST",
+
+        headers,
+
+        body: formData,
+      }
+    );
+
+
+    if (!res.ok) {
+
+      const text =
+        await res
+          .text()
+          .catch(() => "Upload failed");
+
+
+      throw new Error(
+        text ||
+        `Upload failed (${res.status})`
+      );
+    }
+
+
+    return res.json() as Promise<LabReport>;
+  },
+
+
+  /*
+   * Delete a laboratory report.
+   *
+   * This endpoint is PROTECTED.
+   */
+  deleteLabReport: async (
+    id: number
+  ): Promise<void> => {
+
+    const token = getAuthToken();
+
+
+    const headers: HeadersInit = {};
+
+
+    if (token) {
+      headers["Authorization"] =
+        `Bearer ${token}`;
+    }
+
+
+    const res = await fetch(
+      `${API_URL}/lab-reports/${id}`,
+      {
+        method: "DELETE",
+
+        headers,
+      }
+    );
+
+
+    if (!res.ok) {
+
+      const text =
+        await res
+          .text()
+          .catch(() => "Unable to delete lab report.");
+
+
+      throw new Error(
+        text ||
+        `Unable to delete lab report (${res.status})`
+      );
+    }
+  },
+
+
+  /*
+   * Get the public URL of a lab report PDF.
+   *
+   * The PDF itself is served by Spring Boot.
+   */
+  getLabReportUrl: (
+    id: number
+  ): string => {
+    return `${API_URL}/lab-reports/${id}/file`;
+  },
 
 };

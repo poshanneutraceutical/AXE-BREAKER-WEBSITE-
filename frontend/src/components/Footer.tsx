@@ -67,7 +67,7 @@ export default function Footer() {
               Quick Links
             </h4>
             <ul className="space-y-2">
-              {['Home', 'Arsenal', 'Our Story', 'Distribute', 'Contact'].map((l) => (
+              {['Home', 'Products', 'Our Story', 'Distributer', 'Contact','lab-reports'].map((l) => (
                 <li key={l}>
                   <a
                     href={`#${l.toLowerCase().replace(' ', '')}`}
@@ -86,11 +86,11 @@ export default function Footer() {
               Categories
             </h4>
             <ul className="space-y-2">
-              {['Pre-Workout', 'Whey Protein', 'Creatine', 'BCAA', 'Fat Burner', 'Accessories'].map(
+              {['Pre-Workout', 'Whey Protein', 'Creatine', 'BCAA', 'Fat Burner'].map(
                 (l) => (
                   <li key={l}>
                     <a
-                      href="#arsenal"
+                      href="#products"
                       className="text-white/40 hover:text-[#e41e26] text-sm transition-colors"
                     >
                       {l}
@@ -118,7 +118,7 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin size={16} className="text-[#e41e26] mt-0.5 flex-shrink-0" />
                 <span className="text-white/40 text-sm">
-                  The Commercial , #590 , 15th cross, 15C main, sector 4, HSR Layout, Banglore-560102
+                  The Commercial , #590 , 15th cross, 15 C main, sector 4, HSR Layout, Banglore-560102
                 </span>
               </li>
             </ul>

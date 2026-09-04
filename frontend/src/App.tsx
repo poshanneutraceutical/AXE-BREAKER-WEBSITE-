@@ -13,8 +13,9 @@ import Distributor from "./components/Distributor";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
-// --- VERIFY PAGE (Loaded instantly for fast QR scanning) ---
+// --- PAGES ---
 import VerifyPage from "./pages/VerifyPage";
+import LabReportsPage from "./pages/LabReportsPage";
 
 // --- LAZY LOADED PAGES ---
 const Cart = lazy(() => import("./pages/Cart"));
@@ -27,15 +28,30 @@ function HomePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
+
       <main>
+        {/* HERO */}
         <Hero />
+
+        {/* FEATURES */}
         <Features />
+
+        {/* PRODUCTS */}
         <Product />
+
+        {/* ABOUT */}
         <About />
+
+        {/* TICKER */}
         <Ticker />
+
+        {/* DISTRIBUTOR */}
         <Distributor />
+
+        {/* CONTACT */}
         <Contact />
       </main>
+
       <Footer />
     </div>
   );
@@ -46,16 +62,32 @@ export default function App() {
   return (
     <>
       <Routes>
-        {/* Home Page */}
-        <Route path="/" element={<HomePage />} />
 
-        {/* Product Information */}
+        {/* ==========================================
+            HOME PAGE
+            ========================================== */}
+        <Route
+          path="/"
+          element={<HomePage />}
+        />
+
+        {/* ==========================================
+            LAB REPORTS
+            ========================================== */}
+        <Route
+          path="/lab-reports"
+          element={<LabReportsPage />}
+        />
+
+        {/* ==========================================
+            PRODUCT INFORMATION
+            ========================================== */}
         <Route
           path="/productinfo"
           element={
             <Suspense
               fallback={
-                <div className="text-white text-center py-20 text-xl">
+                <div className="min-h-screen bg-black text-white flex items-center justify-center text-xl">
                   Loading Product Info...
                 </div>
               }
@@ -65,16 +97,23 @@ export default function App() {
           }
         />
 
-        {/* QR Verification */}
-        <Route path="/verify" element={<VerifyPage />} />
+        {/* ==========================================
+            QR VERIFICATION
+            ========================================== */}
+        <Route
+          path="/verify"
+          element={<VerifyPage />}
+        />
 
-        {/* Cart */}
+        {/* ==========================================
+            CART
+            ========================================== */}
         <Route
           path="/cart"
           element={
             <Suspense
               fallback={
-                <div className="text-white text-center py-20 text-xl">
+                <div className="min-h-screen bg-black text-white flex items-center justify-center text-xl">
                   Loading Cart...
                 </div>
               }
@@ -84,13 +123,15 @@ export default function App() {
           }
         />
 
-        {/* Checkout */}
+        {/* ==========================================
+            CHECKOUT
+            ========================================== */}
         <Route
           path="/checkout"
           element={
             <Suspense
               fallback={
-                <div className="text-white text-center py-20 text-xl">
+                <div className="min-h-screen bg-black text-white flex items-center justify-center text-xl">
                   Loading Checkout...
                 </div>
               }
@@ -100,13 +141,15 @@ export default function App() {
           }
         />
 
-        {/* Order Success */}
+        {/* ==========================================
+            ORDER SUCCESS
+            ========================================== */}
         <Route
           path="/order-success"
           element={
             <Suspense
               fallback={
-                <div className="text-white text-center py-20 text-xl">
+                <div className="min-h-screen bg-black text-white flex items-center justify-center text-xl">
                   Loading...
                 </div>
               }
@@ -116,7 +159,9 @@ export default function App() {
           }
         />
 
-        {/* 404 Page */}
+        {/* ==========================================
+            404 PAGE
+            ========================================== */}
         <Route
           path="*"
           element={
@@ -125,15 +170,32 @@ export default function App() {
             </div>
           }
         />
+
       </Routes>
 
-      {/* Floating WhatsApp Button */}
+      {/* ==========================================
+          FLOATING WHATSAPP BUTTON
+          ========================================== */}
       <a
         href="https://wa.me/916362302029"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
-        className="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#1EBE5D] text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110"
+        className="
+          fixed
+          bottom-6
+          right-6
+          z-50
+          bg-[#25D366]
+          hover:bg-[#1EBE5D]
+          text-white
+          p-4
+          rounded-full
+          shadow-2xl
+          transition-all
+          duration-300
+          hover:scale-110
+        "
       >
         <FaWhatsapp size={32} />
       </a>

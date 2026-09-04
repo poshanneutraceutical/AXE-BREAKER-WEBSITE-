@@ -234,14 +234,14 @@ export default function Hero() {
             "
           >
             <a
-              href="#arsenal"
+              href="#products"
               className="
                 btn-primary
                 max-md:w-full
                 max-md:justify-center
               "
             >
-              Explore Arsenal
+              Explore Products
               <ArrowRight size={16} />
             </a>
 
@@ -318,7 +318,7 @@ export default function Hero() {
 
       {/* Scroll indicator - desktop only */}
       <a
-        href="#arsenal"
+        href="#products"
         className="
           absolute
           bottom-8

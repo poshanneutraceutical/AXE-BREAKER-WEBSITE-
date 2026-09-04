@@ -163,54 +163,90 @@ export default function Distributor() {
               quality and dominance. Bring the shadows to your city.
             </p>
 
-            {/* Stats */}
-            <div
-              className="
-                grid
-                grid-cols-2
-                gap-6
-                min-w-0
-
-                max-md:gap-x-5
-                max-md:gap-y-7
-              "
-            >
-              {[
-                { num: '40%', label: 'Margin on retail' },
-                { num: '24h', label: 'Dispatch turnaround' },
-                { num: '0', label: 'Franchise fees' },
-                { num: '∞', label: 'Growth potential' },
-              ].map((s) => (
-                <div
-                  key={s.label}
+            {/* Partnership highlights */}
+            <div className="space-y-6">
+              {/* Take the Market */}
+              <div className="border-l-2 border-[#e41e26] pl-4">
+                <h3
                   className="
-                    border-l-2
-                    border-[#e41e26]
-                    pl-4
-                    min-w-0
+                    font-fire
+                    text-lg
+                    md:text-xl
+                    text-white
+                    tracking-wide
+                    mb-1
                   "
                 >
-                  <div className="ghost-logo-text text-3xl text-white max-md:text-2xl">
-                    {s.num}
-                  </div>
+                  TAKE THE MARKET.
+                </h3>
 
-                  <div
-                    className="
-                      text-[0.65rem]
-                      tracking-[0.2em]
-                      text-white/40
-                      uppercase
-                      mt-1
-                      font-display
+                <p
+                  className="
+                    text-white/50
+                    text-sm
+                    md:text-base
+                    leading-relaxed
+                  "
+                >
+                  Build presence. Build demand. Build your territory.
+                </p>
+              </div>
 
-                      max-md:text-[0.55rem]
-                      max-md:tracking-[0.12em]
-                    "
-                  >
-                    {s.label}
-                  </div>
-                </div>
-              ))}
+              {/* Represent the Brand */}
+              <div className="border-l-2 border-[#e41e26] pl-4">
+                <h3
+                  className="
+                    font-fire
+                    text-lg
+                    md:text-xl
+                    text-white
+                    tracking-wide
+                    mb-1
+                  "
+                >
+                  REPRESENT THE BRAND.
+                </h3>
+
+                <p
+                  className="
+                    text-white/50
+                    text-sm
+                    md:text-base
+                    leading-relaxed
+                  "
+                >
+                  Strong products. Strong identity. A brand your
+                  customers remember.
+                </p>
+              </div>
+
+              {/* Grow With Us */}
+              <div className="border-l-2 border-[#e41e26] pl-4">
+                <h3
+                  className="
+                    font-fire
+                    text-lg
+                    md:text-xl
+                    text-white
+                    tracking-wide
+                    mb-1
+                  "
+                >
+                  GROW WITH US.
+                </h3>
+
+                <p
+                  className="
+                    text-white/50
+                    text-sm
+                    md:text-base
+                    leading-relaxed
+                  "
+                >
+                  We provide the products, brand support, and
+                  resources. You bring the hunger.
+                </p>
+              </div>
             </div>
           </div>
 
