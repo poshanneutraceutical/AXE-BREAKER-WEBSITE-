@@ -212,11 +212,7 @@ export default function Hero() {
               max-md:mb-8
             "
           >
-            Engineered for those who refuse to be ordinary. Axe Breaker
-            delivers uncompromising, pharmaceutical-grade
-            supplementation—precision-formulated to fuel relentless
-            intensity, sharpen performance, and push you beyond every
-            limit.
+            AXE BREAKER is precision-formulated for those who train harder, push further, and refuse to back down.Powered by performance-focused ingredients, it is designed to support maximum intensity, relentless energy, razor-sharp focus, endurance, and peak performance—so you can attack every set, overpower fatigue, crush every limit that hold back and dominate every session.
           </p>
 
           {/* Buttons */}
