@@ -86,7 +86,7 @@ export default function Footer() {
               Categories
             </h4>
             <ul className="space-y-2">
-              {['Pre-Workout', 'Whey Protein', 'Creatine', 'BCAA', 'Fat Burner'].map(
+              {['Pre-Workout', 'Protein', 'Essentials', 'Fat Burner'].map(
                 (l) => (
                   <li key={l}>
                     <a
