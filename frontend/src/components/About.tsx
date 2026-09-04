@@ -60,10 +60,7 @@ export default function About() {
             <div className="red-divider" />
 
             <p className="text-white/60 text-lg leading-relaxed mb-6">
-              Axe Breaker was born from a singular obsession: to forge
-              supplements that match the intensity of those who refuse to
-              be average. We do not chase trends. We do not cut corners.
-              We build fuel for the relentless.
+              AXE BREAKER was built with one clear purpose: to develop performance-driven supplementation for those who demand more from themselves.We believe in disciplined formulation, uncompromising quality, and purposeful innovation—not passing trends or shortcuts.
             </p>
 
             <p className="text-white/50 leading-relaxed mb-8">
