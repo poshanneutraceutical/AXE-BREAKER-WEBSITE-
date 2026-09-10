@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ShoppingBag,
+} from 'lucide-react';
 import CartIcon from '../components/CartIcon';
 
 const links = [
@@ -16,11 +20,19 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () =>
+      setScrolled(window.scrollY > 40);
 
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener(
+      'scroll',
+      onScroll
+    );
 
-    return () => window.removeEventListener('scroll', onScroll);
+    return () =>
+      window.removeEventListener(
+        'scroll',
+        onScroll
+      );
   }, []);
 
   return (
@@ -36,7 +48,10 @@ export default function Navbar() {
         {/* =========================
             LOGO
         ========================== */}
-        <a href="#home" className="flex items-center group">
+        <a
+          href="#home"
+          className="flex items-center group"
+        >
           <img
             src="AXE.png"
             alt="Axe Breaker"
@@ -85,6 +100,20 @@ export default function Navbar() {
             DESKTOP RIGHT SIDE
         ========================== */}
         <div className="hidden md:flex items-center gap-4">
+
+          {/* Admin */}
+          <Link
+            to="/admin/login"
+            className="
+              text-sm
+              font-semibold
+              text-white/80
+              hover:text-red-500
+              transition-colors
+            "
+          >
+            Admin
+          </Link>
 
           {/* Verify Product */}
           <Link
@@ -163,7 +192,9 @@ export default function Navbar() {
                 <a
                   href={link.href}
                   className="nav-link block py-2"
-                  onClick={() => setOpen(false)}
+                  onClick={() =>
+                    setOpen(false)
+                  }
                 >
                   {link.label}
                 </a>
@@ -175,9 +206,30 @@ export default function Navbar() {
               <Link
                 to="/lab-reports"
                 className="nav-link block py-2"
-                onClick={() => setOpen(false)}
+                onClick={() =>
+                  setOpen(false)
+                }
               >
                 Lab Reports
+              </Link>
+            </li>
+
+            {/* Admin */}
+            <li>
+              <Link
+                to="/admin/login"
+                className="
+                  nav-link
+                  block
+                  py-2
+                  text-[#e41e26]
+                  hover:text-white
+                "
+                onClick={() =>
+                  setOpen(false)
+                }
+              >
+                Admin
               </Link>
             </li>
 
@@ -186,7 +238,9 @@ export default function Navbar() {
               <Link
                 to="/verify"
                 className="nav-link block py-2"
-                onClick={() => setOpen(false)}
+                onClick={() =>
+                  setOpen(false)
+                }
               >
                 Verify Product
               </Link>
@@ -217,6 +271,7 @@ export default function Navbar() {
           </ul>
         </div>
       )}
+
     </header>
   );
 }

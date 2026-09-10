@@ -12,10 +12,13 @@ import Ticker from "./components/Ticker";
 import Distributor from "./components/Distributor";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import AdminProtectedRoute from "./components/AdminProtectedRoute";
 
 // --- PAGES ---
 import VerifyPage from "./pages/VerifyPage";
 import LabReportsPage from "./pages/LabReportsPage";
+import AdminLabReports from "./pages/AdminLabReports";
+import AdminLogin from "./pages/AdminLogin";
 
 // --- LAZY LOADED PAGES ---
 const Cart = lazy(() => import("./pages/Cart"));
@@ -72,12 +75,32 @@ export default function App() {
         />
 
         {/* ==========================================
-            LAB REPORTS
+            PUBLIC LAB REPORTS
             ========================================== */}
         <Route
           path="/lab-reports"
           element={<LabReportsPage />}
         />
+
+        {/* ==========================================
+            ADMIN LOGIN
+            ========================================== */}
+        <Route
+          path="/admin/login"
+          element={<AdminLogin />}
+        />
+
+        {/* ==========================================
+            PROTECTED ADMIN AREA
+            ========================================== */}
+        <Route element={<AdminProtectedRoute />}>
+
+          <Route
+            path="/admin/lab-reports"
+            element={<AdminLabReports />}
+          />
+
+        </Route>
 
         {/* ==========================================
             PRODUCT INFORMATION

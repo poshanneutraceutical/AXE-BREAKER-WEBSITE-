@@ -33,7 +33,7 @@ export default function Hero() {
         "
       >
         <img
-          src="/WEB FRONT2 TRA.png"
+          src="/WEB FRONT2 TRA.webp"
           alt="Axe Breaker Warriors"
           className="
             absolute

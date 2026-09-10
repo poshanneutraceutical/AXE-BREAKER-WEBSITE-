@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Upload,
   FileText,
   Trash2,
   Loader2,
   CheckCircle2,
+  LogOut,
 } from 'lucide-react';
 
 import {
@@ -12,7 +14,10 @@ import {
   type LabReport,
 } from '../lib/api';
 
+import { adminApi } from '../lib/adminApi';
+
 export default function AdminLabReports() {
+  const navigate = useNavigate();
 
   const [reports, setReports] =
     useState<LabReport[]>([]);
@@ -35,53 +40,83 @@ export default function AdminLabReports() {
   const [loadingReports, setLoadingReports] =
     useState(true);
 
+  const [checkingSession, setCheckingSession] =
+    useState(true);
+
   const [message, setMessage] =
     useState('');
 
   const [error, setError] =
     useState('');
 
+  // ==========================================
+  // CHECK ADMIN SESSION
+  // ==========================================
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        await adminApi.checkSession();
+      } catch (err) {
+        console.error(
+          'Admin session check failed:',
+          err
+        );
+
+        navigate(
+          '/admin/login',
+          {
+            replace: true,
+          }
+        );
+      } finally {
+        setCheckingSession(false);
+      }
+    };
+
+    checkSession();
+  }, [navigate]);
+
+  // ==========================================
+  // LOAD REPORTS
+  // ==========================================
   const loadReports = async () => {
-
     try {
-
       setLoadingReports(true);
+      setError('');
 
       const data =
         await api.getLabReports();
 
       setReports(data);
-
     } catch (err) {
-
       console.error(err);
 
       setError(
         'Unable to load lab reports.'
       );
-
     } finally {
-
       setLoadingReports(false);
-
     }
   };
 
   useEffect(() => {
-    loadReports();
-  }, []);
+    if (!checkingSession) {
+      loadReports();
+    }
+  }, [checkingSession]);
 
+  // ==========================================
+  // UPLOAD REPORT
+  // ==========================================
   const handleSubmit = async (
     e: React.FormEvent
   ) => {
-
     e.preventDefault();
 
     setMessage('');
     setError('');
 
     if (!title.trim()) {
-
       setError(
         'Please enter a report title.'
       );
@@ -90,7 +125,6 @@ export default function AdminLabReports() {
     }
 
     if (!file) {
-
       setError(
         'Please select a PDF file.'
       );
@@ -102,7 +136,6 @@ export default function AdminLabReports() {
       file.type !==
       'application/pdf'
     ) {
-
       setError(
         'Only PDF files are allowed.'
       );
@@ -110,11 +143,22 @@ export default function AdminLabReports() {
       return;
     }
 
-    try {
+    // 15 MB limit
+    const maxSize =
+      15 * 1024 * 1024;
 
+    if (file.size > maxSize) {
+      setError(
+        'The PDF file must be smaller than 15 MB.'
+      );
+
+      return;
+    }
+
+    try {
       setLoading(true);
 
-      await api.uploadLabReport(
+      await adminApi.uploadLabReport(
         title.trim(),
         productName.trim(),
         reportDate,
@@ -142,8 +186,26 @@ export default function AdminLabReports() {
       await loadReports();
 
     } catch (err) {
+      console.error(
+        'Upload error:',
+        err
+      );
 
-      console.error(err);
+      if (
+        err instanceof Error &&
+        err.message
+          .toLowerCase()
+          .includes('admin login required')
+      ) {
+        navigate(
+          '/admin/login',
+          {
+            replace: true,
+          }
+        );
+
+        return;
+      }
 
       setError(
         err instanceof Error
@@ -152,26 +214,32 @@ export default function AdminLabReports() {
       );
 
     } finally {
-
       setLoading(false);
-
     }
   };
 
+  // ==========================================
+  // DELETE REPORT
+  // ==========================================
   const handleDelete = async (
     id: number
   ) => {
-
     const confirmed =
       window.confirm(
         'Are you sure you want to delete this lab report?'
       );
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
+
+    setError('');
+    setMessage('');
 
     try {
-
-      await api.deleteLabReport(id);
+      await adminApi.deleteLabReport(
+        id
+      );
 
       setReports(
         reports.filter(
@@ -180,16 +248,95 @@ export default function AdminLabReports() {
         )
       );
 
-    } catch (err) {
-
-      console.error(err);
-
-      setError(
-        'Unable to delete report.'
+      setMessage(
+        'Lab report deleted successfully.'
       );
 
+    } catch (err) {
+      console.error(
+        'Delete error:',
+        err
+      );
+
+      if (
+        err instanceof Error &&
+        err.message
+          .toLowerCase()
+          .includes('admin login required')
+      ) {
+        navigate(
+          '/admin/login',
+          {
+            replace: true,
+          }
+        );
+
+        return;
+      }
+
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Unable to delete report.'
+      );
     }
   };
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+  const handleLogout = async () => {
+    try {
+      await adminApi.logout();
+    } catch (err) {
+      console.error(
+        'Logout error:',
+        err
+      );
+    } finally {
+      navigate(
+        '/admin/login',
+        {
+          replace: true,
+        }
+      );
+    }
+  };
+
+  // ==========================================
+  // SESSION CHECK SCREEN
+  // ==========================================
+  if (checkingSession) {
+    return (
+      <div
+        className="
+          min-h-screen
+          bg-[#0a0a0a]
+          text-white
+          flex
+          items-center
+          justify-center
+          p-6
+        "
+      >
+        <div className="flex items-center gap-3 text-white/50">
+
+          <Loader2
+            size={24}
+            className="
+              text-[#e41e26]
+              animate-spin
+            "
+          />
+
+          <span className="uppercase tracking-[0.2em] text-sm">
+            Checking Admin Access...
+          </span>
+
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -209,59 +356,104 @@ export default function AdminLabReports() {
         "
       >
 
-        {/* Header */}
-        <div className="mb-10">
+        {/* ==========================================
+            HEADER
+            ========================================== */}
+        <div
+          className="
+            mb-10
+            flex
+            flex-col
+            md:flex-row
+            md:items-end
+            md:justify-between
+            gap-6
+          "
+        >
 
-          <div
-            className="
-              flex
-              items-center
-              gap-3
-              mb-4
-            "
-          >
+          <div>
 
             <div
               className="
-                w-10
-                h-[2px]
-                bg-[#e41e26]
+                flex
+                items-center
+                gap-3
+                mb-4
               "
-            />
+            >
 
-            <span className="section-label">
-              Administration
-            </span>
+              <div
+                className="
+                  w-10
+                  h-[2px]
+                  bg-[#e41e26]
+                "
+              />
+
+              <span className="section-label">
+                Administration
+              </span>
+
+            </div>
+
+            <h1
+              className="
+                ghost-logo-text
+                text-4xl
+                md:text-6xl
+                leading-none
+              "
+            >
+              LAB
+              <span className="text-[#e41e26]">
+                REPORTS
+              </span>
+            </h1>
+
+            <p
+              className="
+                text-white/40
+                mt-4
+              "
+            >
+              Upload and manage laboratory reports
+              displayed on the public website.
+            </p>
 
           </div>
 
-          <h1
+          {/* Logout */}
+          <button
+            type="button"
+            onClick={handleLogout}
             className="
-              ghost-logo-text
-              text-4xl
-              md:text-6xl
-              leading-none
+              inline-flex
+              items-center
+              justify-center
+              gap-2
+              border
+              border-white/10
+              text-white/60
+              hover:border-[#e41e26]/50
+              hover:text-[#e41e26]
+              px-5
+              py-3
+              text-sm
+              font-semibold
+              uppercase
+              tracking-wider
+              transition-colors
             "
           >
-            LAB
-            <span className="text-[#e41e26]">
-              REPORTS
-            </span>
-          </h1>
-
-          <p
-            className="
-              text-white/40
-              mt-4
-            "
-          >
-            Upload and manage laboratory reports
-            displayed on the public website.
-          </p>
+            <LogOut size={17} />
+            Logout
+          </button>
 
         </div>
 
-        {/* Upload form */}
+        {/* ==========================================
+            UPLOAD FORM
+            ========================================== */}
         <div
           className="
             bg-[#111111]
@@ -298,6 +490,7 @@ export default function AdminLabReports() {
 
           </div>
 
+          {/* Success message */}
           {message && (
             <div
               className="
@@ -321,6 +514,7 @@ export default function AdminLabReports() {
             </div>
           )}
 
+          {/* Error message */}
           {error && (
             <div
               className="
@@ -350,6 +544,7 @@ export default function AdminLabReports() {
               "
             >
 
+              {/* Report Title */}
               <div>
 
                 <label
@@ -368,17 +563,21 @@ export default function AdminLabReports() {
                 <input
                   value={title}
                   onChange={(e) =>
-                    setTitle(e.target.value)
+                    setTitle(
+                      e.target.value
+                    )
                   }
                   placeholder="Protein Matrix-150 Lab Report"
                   className="
                     ghost-input
                     w-full
                   "
+                  disabled={loading}
                 />
 
               </div>
 
+              {/* Product Name */}
               <div>
 
                 <label
@@ -406,12 +605,14 @@ export default function AdminLabReports() {
                     ghost-input
                     w-full
                   "
+                  disabled={loading}
                 />
 
               </div>
 
             </div>
 
+            {/* Report Date */}
             <div>
 
               <label
@@ -439,10 +640,12 @@ export default function AdminLabReports() {
                   ghost-input
                   w-full
                 "
+                disabled={loading}
               />
 
             </div>
 
+            {/* PDF */}
             <div>
 
               <label
@@ -486,6 +689,7 @@ export default function AdminLabReports() {
                   border-white/10
                   p-2
                 "
+                disabled={loading}
               />
 
               <p
@@ -500,12 +704,14 @@ export default function AdminLabReports() {
 
             </div>
 
+            {/* Upload button */}
             <button
               type="submit"
               disabled={loading}
               className="
                 btn-primary
                 disabled:opacity-50
+                disabled:cursor-not-allowed
               "
             >
 
@@ -532,7 +738,9 @@ export default function AdminLabReports() {
 
         </div>
 
-        {/* Existing reports */}
+        {/* ==========================================
+            EXISTING REPORTS
+            ========================================== */}
         <div
           className="
             bg-[#111111]
@@ -577,6 +785,32 @@ export default function AdminLabReports() {
                   animate-spin
                 "
               />
+
+            </div>
+
+          ) : error && reports.length === 0 ? (
+
+            <div
+              className="
+                p-12
+                text-center
+              "
+            >
+
+              <p className="text-[#e41e26]">
+                {error}
+              </p>
+
+              <button
+                type="button"
+                onClick={loadReports}
+                className="
+                  mt-5
+                  btn-outline
+                "
+              >
+                Try Again
+              </button>
 
             </div>
 
@@ -665,6 +899,30 @@ export default function AdminLabReports() {
                         {report.fileName}
                       </p>
 
+                      {report.productName && (
+                        <p
+                          className="
+                            text-white/25
+                            text-xs
+                            mt-1
+                          "
+                        >
+                          {report.productName}
+                        </p>
+                      )}
+
+                      {report.reportDate && (
+                        <p
+                          className="
+                            text-white/20
+                            text-xs
+                            mt-1
+                          "
+                        >
+                          {report.reportDate}
+                        </p>
+                      )}
+
                     </div>
 
                   </div>
@@ -705,6 +963,7 @@ export default function AdminLabReports() {
                         transition-colors
                       "
                       title="Delete report"
+                      aria-label="Delete report"
                     >
 
                       <Trash2 size={17} />

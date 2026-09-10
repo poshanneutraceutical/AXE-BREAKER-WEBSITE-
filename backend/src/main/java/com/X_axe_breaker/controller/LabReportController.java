@@ -2,12 +2,17 @@ package com.X_axe_breaker.controller;
 
 import com.X_axe_breaker.dto.LabReportDTO;
 import com.X_axe_breaker.entity.LabReport;
+import com.X_axe_breaker.service.AdminAuthService;
 import com.X_axe_breaker.service.LabReportService;
+
+import jakarta.servlet.http.HttpSession;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -22,6 +27,8 @@ import java.util.List;
 public class LabReportController {
 
     private final LabReportService labReportService;
+
+    private final AdminAuthService adminAuthService;
 
     /*
      * PUBLIC
@@ -58,11 +65,16 @@ public class LabReportController {
         MediaType mediaType;
 
         try {
-            mediaType = MediaType.parseMediaType(
-                    report.getContentType()
-            );
+
+            mediaType =
+                    MediaType.parseMediaType(
+                            report.getContentType()
+                    );
+
         } catch (Exception e) {
-            mediaType = MediaType.APPLICATION_PDF;
+
+            mediaType =
+                    MediaType.APPLICATION_PDF;
         }
 
         return ResponseEntity.ok()
@@ -71,7 +83,9 @@ public class LabReportController {
                         HttpHeaders.CONTENT_DISPOSITION,
                         ContentDisposition
                                 .inline()
-                                .filename(report.getFileName())
+                                .filename(
+                                        report.getFileName()
+                                )
                                 .build()
                                 .toString()
                 )
@@ -82,26 +96,44 @@ public class LabReportController {
     }
 
     /*
-     * ADMIN
+     * ADMIN ONLY
      *
      * Upload a new lab report.
      */
     @PostMapping(
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+            consumes =
+                    MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<LabReportDTO> uploadReport(
+    public ResponseEntity<?> uploadReport(
             @RequestParam("title")
             String title,
 
-            @RequestParam(value = "productName", required = false)
+            @RequestParam(
+                    value = "productName",
+                    required = false
+            )
             String productName,
 
-            @RequestParam(value = "reportDate", required = false)
+            @RequestParam(
+                    value = "reportDate",
+                    required = false
+            )
             String reportDate,
 
             @RequestParam("file")
-            MultipartFile file
+            MultipartFile file,
+
+            HttpSession session
     ) throws Exception {
+
+        if (!adminAuthService.isAuthenticated(session)) {
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(
+                            "Admin login required."
+                    );
+        }
 
         return ResponseEntity.ok(
                 labReportService.uploadReport(
@@ -114,14 +146,24 @@ public class LabReportController {
     }
 
     /*
-     * ADMIN
+     * ADMIN ONLY
      *
      * Delete a report.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReport(
-            @PathVariable Long id
+    public ResponseEntity<?> deleteReport(
+            @PathVariable Long id,
+            HttpSession session
     ) {
+
+        if (!adminAuthService.isAuthenticated(session)) {
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(
+                            "Admin login required."
+                    );
+        }
 
         labReportService.deleteReport(id);
 
