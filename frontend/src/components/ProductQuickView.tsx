@@ -464,9 +464,9 @@ export default function ProductQuickView({
     ) {
 
       return [
-        "/products/pre-workout/1.png",
-        "/products/pre-workout/2.png",
-        "/products/pre-workout/3.png",
+        "/products/pre-workout/4.png",
+        "/products/pre-workout/5.png",
+        "/products/pre-workout/6.png",
       ];
     }
 
@@ -484,9 +484,9 @@ export default function ProductQuickView({
     ) {
 
       return [
-        "/products/pre-workout/4.png",
-        "/products/pre-workout/5.png",
-        "/products/pre-workout/6.png",
+        "/products/pre-workout/1.png",
+        "/products/pre-workout/2.png",
+        "/products/pre-workout/3.png",
       ];
     }
 
@@ -544,9 +544,9 @@ export default function ProductQuickView({
     ) {
 
       return [
-       "/products/Fat-burner/7.png",
-               "/products/Fat-burner/8.png",
-               "/products/Fat-burner/9.png",
+       "/products/Fat-burner/10.png",
+               "/products/Fat-burner/11.png",
+               "/products/Fat-burner/12.png",
       ];
     }
 
@@ -564,9 +564,9 @@ export default function ProductQuickView({
     ) {
 
       return [
-                "/products/Fat-burner/10.png",
-                "/products/Fat-burner/11.png",
-                "/products/Fat-burner/12.png",
+                "/products/Fat-burner/7.png",
+                "/products/Fat-burner/8.png",
+                "/products/Fat-burner/9.png",
       ];
     }
 
