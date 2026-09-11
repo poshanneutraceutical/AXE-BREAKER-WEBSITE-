@@ -147,7 +147,7 @@ const fallbackProducts: Product[] = [
       "/products/protein/27.png",
     ],
 
-    badge: "BEST SELLER",
+
 
     featured: true,
 
@@ -962,6 +962,29 @@ export default function Products() {
                             `${variant.productName} ${variant.variantName}`
                           }
                         />
+
+                        {variant.productId === 5 && (
+                          <div
+                            className="
+                              absolute
+                              top-5
+                              left-5
+                              z-30
+                              bg-red-600
+                              text-white
+                              px-4
+                              py-2
+                              rounded-full
+                              text-xs
+                              font-bold
+                              tracking-widest
+                              uppercase
+                              shadow-lg
+                            "
+                          >
+                            Coming Soon
+                          </div>
+                        )}
 
 
                         <div
@@ -1959,6 +1982,27 @@ export default function Products() {
                         images={p.images}
                         productName={p.name}
                       />
+
+                      <div
+                        className="
+                          absolute
+                          top-5
+                          left-5
+                          z-30
+                          bg-red-600
+                          text-white
+                          px-4
+                          py-2
+                          rounded-full
+                          text-xs
+                          font-bold
+                          tracking-widest
+                          uppercase
+                          shadow-lg
+                        "
+                      >
+                        Coming Soon
+                      </div>
 
 
                       <div

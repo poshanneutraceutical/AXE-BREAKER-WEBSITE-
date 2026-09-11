@@ -181,6 +181,17 @@ export default function Cart() {
                   </h2>
 
 
+                  {item.flavourName && (
+
+                    <p className="text-white/60 text-base mb-2">
+
+                      Flavour: {item.flavourName}
+
+                    </p>
+
+                  )}
+
+
 
                   <p className="text-red-500 text-xl mb-3">
 
