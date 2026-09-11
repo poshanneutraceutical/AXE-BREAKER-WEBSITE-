@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { orderService } from "../services/orderService";
 import { getCustomerId } from "../utils/customer";
-import { useEffect } from "react";
+
 const CUSTOMER_ID = getCustomerId();
 
 export default function Checkout() {
   const navigate = useNavigate();
 
-  const { cart, clearCart } = useCart(); // ✅ added clearCart
+  const { cart, clearCart } = useCart();
 
   const [loading, setLoading] = useState(false);
 
@@ -23,14 +23,16 @@ export default function Checkout() {
     pincode: "",
   });
 
-  // ⚠️ safer navigation (avoid render-time navigate crash)
+  // Redirect to cart when there are no items.
   useEffect(() => {
     if (!cart || cart.items.length === 0) {
       navigate("/cart");
     }
   }, [cart, navigate]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
@@ -46,14 +48,14 @@ export default function Checkout() {
         ...form,
       });
 
-      // ✅ IMPORTANT: clear cart after successful order
+      // Clear cart after successful order.
       clearCart();
 
-      // optional: if cart is stored in localStorage also clear it
+      // Clear localStorage cart as well.
       localStorage.removeItem("cart");
 
       navigate("/order-success", {
-        state: { order }, // ✅ FIXED structure
+        state: { order },
       });
     } catch (error) {
       console.error(error);
@@ -65,14 +67,66 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="max-w-7xl mx-auto py-16 px-6">
-        <h1 className="text-5xl font-bold mb-10">Checkout</h1>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* LEFT */}
-          <div className="space-y-5">
+      <div
+        className="
+          max-w-7xl
+          mx-auto
+          py-16
+          max-md:py-28
+          px-6
+          max-md:px-4
+          w-full
+          min-w-0
+        "
+      >
+
+        {/* =========================
+            PAGE TITLE
+        ========================== */}
+        <h1
+          className="
+            text-5xl
+            max-md:text-4xl
+            max-sm:text-3xl
+            font-bold
+            mb-10
+            max-md:mb-8
+          "
+        >
+          Checkout
+        </h1>
+
+        <div
+          className="
+            grid
+            lg:grid-cols-2
+            gap-12
+            max-md:gap-8
+            w-full
+            min-w-0
+            items-start
+          "
+        >
+
+          {/* =========================
+              LEFT - CUSTOMER DETAILS
+          ========================== */}
+          <div className="space-y-5 w-full min-w-0">
+
             <input
-              className="w-full bg-[#111] border border-white/10 rounded-lg p-4"
+              className="
+                w-full
+                min-w-0
+                bg-[#111]
+                border
+                border-white/10
+                rounded-lg
+                p-4
+                text-white
+                outline-none
+                focus:border-red-500
+              "
               placeholder="Full Name"
               name="customerName"
               value={form.customerName}
@@ -80,7 +134,18 @@ export default function Checkout() {
             />
 
             <input
-              className="w-full bg-[#111] border border-white/10 rounded-lg p-4"
+              className="
+                w-full
+                min-w-0
+                bg-[#111]
+                border
+                border-white/10
+                rounded-lg
+                p-4
+                text-white
+                outline-none
+                focus:border-red-500
+              "
               placeholder="Email"
               name="email"
               value={form.email}
@@ -88,7 +153,18 @@ export default function Checkout() {
             />
 
             <input
-              className="w-full bg-[#111] border border-white/10 rounded-lg p-4"
+              className="
+                w-full
+                min-w-0
+                bg-[#111]
+                border
+                border-white/10
+                rounded-lg
+                p-4
+                text-white
+                outline-none
+                focus:border-red-500
+              "
               placeholder="Phone"
               name="phone"
               value={form.phone}
@@ -96,7 +172,18 @@ export default function Checkout() {
             />
 
             <input
-              className="w-full bg-[#111] border border-white/10 rounded-lg p-4"
+              className="
+                w-full
+                min-w-0
+                bg-[#111]
+                border
+                border-white/10
+                rounded-lg
+                p-4
+                text-white
+                outline-none
+                focus:border-red-500
+              "
               placeholder="Address"
               name="address"
               value={form.address}
@@ -104,7 +191,18 @@ export default function Checkout() {
             />
 
             <input
-              className="w-full bg-[#111] border border-white/10 rounded-lg p-4"
+              className="
+                w-full
+                min-w-0
+                bg-[#111]
+                border
+                border-white/10
+                rounded-lg
+                p-4
+                text-white
+                outline-none
+                focus:border-red-500
+              "
               placeholder="City"
               name="city"
               value={form.city}
@@ -112,7 +210,18 @@ export default function Checkout() {
             />
 
             <input
-              className="w-full bg-[#111] border border-white/10 rounded-lg p-4"
+              className="
+                w-full
+                min-w-0
+                bg-[#111]
+                border
+                border-white/10
+                rounded-lg
+                p-4
+                text-white
+                outline-none
+                focus:border-red-500
+              "
               placeholder="State"
               name="state"
               value={form.state}
@@ -120,55 +229,165 @@ export default function Checkout() {
             />
 
             <input
-              className="w-full bg-[#111] border border-white/10 rounded-lg p-4"
+              className="
+                w-full
+                min-w-0
+                bg-[#111]
+                border
+                border-white/10
+                rounded-lg
+                p-4
+                text-white
+                outline-none
+                focus:border-red-500
+              "
               placeholder="Pincode"
               name="pincode"
               value={form.pincode}
               onChange={handleChange}
             />
+
           </div>
 
-          {/* RIGHT */}
-          <div className="bg-[#111] rounded-xl border border-white/10 p-6">
-            <h2 className="text-3xl font-bold mb-6">Order Summary</h2>
+          {/* =========================
+              RIGHT - ORDER SUMMARY
+          ========================== */}
+          <div
+            className="
+              bg-[#111]
+              rounded-xl
+              border
+              border-white/10
+              p-6
+              max-md:p-5
+              w-full
+              min-w-0
+            "
+          >
 
-            <div className="space-y-5">
+            <h2
+              className="
+                text-3xl
+                max-md:text-2xl
+                font-bold
+                mb-6
+              "
+            >
+              Order Summary
+            </h2>
+
+            <div className="space-y-5 w-full min-w-0">
+
               {cart.items.map((item) => (
+
                 <div
                   key={item.productId}
-                  className="flex justify-between"
+                  className="
+                    flex
+                    justify-between
+                    gap-4
+                    items-start
+                    min-w-0
+                    w-full
+                  "
                 >
-                  <div>
-                    <p>{item.productName}</p>
+
+                  {/* ITEM DETAILS */}
+                  <div className="min-w-0 flex-1">
+
+                    <p className="break-words">
+                      {item.productName}
+                    </p>
+
+                    {item.flavourName && (
+                      <p
+                        className="
+                          text-white/50
+                          text-sm
+                          mt-1
+                          break-words
+                        "
+                      >
+                        Flavour: {item.flavourName}
+                      </p>
+                    )}
+
+                    {item.weight && (
+                      <p
+                        className="
+                          text-white/40
+                          text-sm
+                          mt-1
+                        "
+                      >
+                        Weight: {item.weight}
+                      </p>
+                    )}
+
                     <small className="text-white/50">
                       Qty : {item.quantity}
                     </small>
+
                   </div>
 
-                  <p>
+                  {/* ITEM PRICE */}
+                  <p
+                    className="
+                      shrink-0
+                      text-right
+                      whitespace-nowrap
+                    "
+                  >
                     ₹{item.subtotal.toLocaleString("en-IN")}
                   </p>
+
                 </div>
+
               ))}
+
             </div>
 
             <hr className="my-6 border-white/10" />
 
-            <div className="flex justify-between text-2xl font-bold">
+            {/* TOTAL */}
+            <div
+              className="
+                flex
+                justify-between
+                gap-4
+                text-2xl
+                max-md:text-xl
+                font-bold
+              "
+            >
               <span>Total</span>
-              <span>
+
+              <span className="shrink-0 text-right">
                 ₹{cart.totalAmount.toLocaleString("en-IN")}
               </span>
             </div>
 
+            {/* PLACE ORDER */}
             <button
               disabled={loading}
               onClick={placeOrder}
-              className="btn-primary w-full mt-8 justify-center"
+              className="
+                btn-primary
+                w-full
+                mt-8
+                justify-center
+                text-center
+                disabled:opacity-60
+                disabled:cursor-not-allowed
+              "
             >
-              {loading ? "Placing Order..." : "Place Order"}
+              {loading
+                ? "Placing Order..."
+                : "Place Order"}
             </button>
+
           </div>
+
         </div>
       </div>
     </div>

@@ -386,3 +386,67 @@ button {
     max-width: 100%;
   }
 }
+/* =========================================================
+   AXE BREAKER MOBILE CART + NAVBAR RESPONSIVENESS
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  /* Keep the mobile navbar contents aligned */
+  header nav {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Prevent the mobile logo from forcing the header wider */
+  header nav > a {
+    min-width: 0;
+  }
+
+  header nav > a img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Keep mobile cart and menu side-by-side */
+  header nav > div {
+    flex-shrink: 0;
+  }
+
+  /* Prevent cart badge from being clipped */
+  header button {
+    overflow: visible;
+  }
+
+  /* Cart page mobile safety */
+  .min-h-screen {
+    max-width: 100%;
+  }
+
+  /*
+   * Prevent any cart content from creating
+   * horizontal scrolling.
+   */
+  [class*="rounded-xl"] {
+    max-width: 100%;
+  }
+
+  /*
+   * Make long product/flavour names wrap safely.
+   */
+  h1,
+  h2,
+  h3,
+  p,
+  span {
+    max-width: 100%;
+  }
+
+  /*
+   * Keep buttons usable on narrow screens.
+   */
+  .btn-primary,
+  .btn-outline {
+    max-width: 100%;
+  }
+}

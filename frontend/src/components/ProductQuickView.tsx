@@ -958,7 +958,7 @@ export default function ProductQuickView({
           relative
           w-full
           max-w-6xl
-          max-h-[90vh]
+          max-h-[92vh]
           overflow-y-auto
           rounded-2xl
           bg-[#111111]
@@ -973,10 +973,13 @@ export default function ProductQuickView({
 
         <div
           className="
-            grid
-            lg:grid-cols-2
-            gap-10
-            p-8
+           grid
+           lg:grid-cols-2
+           gap-6
+           lg:gap-10
+           p-4
+           sm:p-6
+           lg:p-8
           "
         >
 

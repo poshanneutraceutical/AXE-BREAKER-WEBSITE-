@@ -43,14 +43,25 @@ export default function Navbar() {
           : 'bg-transparent py-5'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <nav
+        className="
+          max-w-7xl
+          mx-auto
+          px-6
+          max-md:px-4
+          flex
+          items-center
+          justify-between
+          w-full
+        "
+      >
 
         {/* =========================
             LOGO
         ========================== */}
         <a
           href="#home"
-          className="flex items-center group"
+          className="flex items-center group shrink-0"
         >
           <img
             src="AXE.png"
@@ -61,9 +72,9 @@ export default function Navbar() {
               h-[100px]
               -translate-y-[10px]
 
-              max-md:w-[165px]
-              max-md:h-[75px]
-              max-md:-translate-y-[4px]
+              max-md:w-[145px]
+              max-md:h-[68px]
+              max-md:-translate-y-[3px]
             "
           />
         </a>
@@ -148,26 +159,47 @@ export default function Navbar() {
         </div>
 
         {/* =========================
-            MOBILE MENU BUTTON
+            MOBILE RIGHT SIDE
+            CART + MENU
         ========================== */}
-        <button
+        <div
           className="
             md:hidden
-            text-white
             flex
             items-center
-            justify-center
+            gap-1
             shrink-0
           "
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle Menu"
         >
-          {open ? (
-            <X size={26} />
-          ) : (
-            <Menu size={26} />
-          )}
-        </button>
+
+          {/* MOBILE CART */}
+          <div className="flex items-center justify-center">
+            <CartIcon />
+          </div>
+
+          {/* MOBILE MENU BUTTON */}
+          <button
+            className="
+              text-white
+              flex
+              items-center
+              justify-center
+              shrink-0
+              p-2
+              rounded-md
+            "
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle Menu"
+            type="button"
+          >
+            {open ? (
+              <X size={26} />
+            ) : (
+              <Menu size={26} />
+            )}
+          </button>
+
+        </div>
 
       </nav>
 
@@ -184,7 +216,15 @@ export default function Navbar() {
             animate-slideDown
           "
         >
-          <ul className="flex flex-col px-6 py-4 gap-4">
+          <ul
+            className="
+              flex
+              flex-col
+              px-6
+              py-4
+              gap-4
+            "
+          >
 
             {/* Navigation Links */}
             {links.map((link) => (
@@ -244,11 +284,6 @@ export default function Navbar() {
               >
                 Verify Product
               </Link>
-            </li>
-
-            {/* Cart */}
-            <li className="flex justify-center py-2">
-              <CartIcon />
             </li>
 
             {/* Shop Now */}

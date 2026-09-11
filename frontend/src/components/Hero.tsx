@@ -46,11 +46,11 @@ export default function Hero() {
             brightness-150
             contrast-110
 
-            max-md:top-[70px]
+            max-md:top-[78px]
             max-md:left-1/2
             max-md:right-auto
             max-md:-translate-x-1/2
-            max-md:w-[115%]
+            max-md:w-[105%]
             max-md:h-auto
             max-md:max-w-none
             max-md:object-contain
