@@ -16,7 +16,7 @@ export interface AddToCartRequest {
      * Optional because normal products do not
      * have variants.
      */
-    flavourId?: number;
+    flavourId?: number | null;
 
     quantity: number;
 
@@ -104,7 +104,9 @@ export const cartService = {
 
         const response =
             await axios.get(
-                `${API}/${customerId}`
+                `${API}/${encodeURIComponent(
+                    customerId
+                )}`
             );
 
 
@@ -122,22 +124,47 @@ export const cartService = {
 
         productId: number,
 
-        quantity: number
+        quantity: number,
+
+        flavourId?: number
 
     ): Promise<Cart> => {
+
+
+        const params: {
+            quantity: number;
+            flavourId?: number;
+        } = {
+            quantity
+        };
+
+
+        /*
+         * Send flavourId when this cart item is a
+         * specific variant.
+         */
+        if (
+            flavourId !== undefined &&
+            flavourId !== null
+        ) {
+
+            params.flavourId =
+                flavourId;
+
+        }
 
 
         const response =
             await axios.put(
 
-                `${API}/${customerId}/${productId}`,
+                `${API}/${encodeURIComponent(
+                    customerId
+                )}/${productId}`,
 
                 null,
 
                 {
-                    params: {
-                        quantity
-                    }
+                    params
                 }
 
             );
@@ -155,15 +182,37 @@ export const cartService = {
 
         customerId: string,
 
-        productId: number
+        productId: number,
+
+        flavourId?: number
 
     ): Promise<Cart> => {
+
+
+        const params:
+            | { flavourId: number }
+            | undefined =
+
+            flavourId !== undefined &&
+            flavourId !== null
+
+                ? {
+                    flavourId
+                }
+
+                : undefined;
 
 
         const response =
             await axios.delete(
 
-                `${API}/${customerId}/${productId}`
+                `${API}/${encodeURIComponent(
+                    customerId
+                )}/${productId}`,
+
+                {
+                    params
+                }
 
             );
 
@@ -182,7 +231,9 @@ export const cartService = {
 
 
         await axios.delete(
-            `${API}/${customerId}/clear`
+            `${API}/${encodeURIComponent(
+                customerId
+            )}/clear`
         );
 
     }

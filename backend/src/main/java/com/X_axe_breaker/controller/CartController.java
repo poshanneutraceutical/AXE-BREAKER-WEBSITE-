@@ -16,37 +16,25 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class CartController {
 
-
     private final CartService cartService;
 
 
-    /*
-     * ============================================================
-     * ADD TO CART
-     * ============================================================
-     *
-     * Example:
-     *
-     * {
-     *   "customerId": "123",
-     *   "productId": 5,
-     *   "flavourId": 5,
-     *   "quantity": 1
-     * }
-     */
+    // ============================================================
+    // ADD TO CART
+    // ============================================================
     @PostMapping("/add")
     public CartDTO addToCart(
             @Valid @RequestBody AddToCartRequest request) {
 
-        return cartService.addToCart(request);
+        return cartService.addToCart(
+                request
+        );
     }
 
 
-    /*
-     * ============================================================
-     * GET CART
-     * ============================================================
-     */
+    // ============================================================
+    // GET CART
+    // ============================================================
     @GetMapping("/{customerId}")
     public CartDTO getCart(
             @PathVariable String customerId) {
@@ -57,21 +45,9 @@ public class CartController {
     }
 
 
-    /*
-     * ============================================================
-     * UPDATE QUANTITY
-     * ============================================================
-     *
-     * flavourId is optional.
-     *
-     * Normal product:
-     *
-     * ?quantity=2
-     *
-     * Variant product:
-     *
-     * ?quantity=2&flavourId=5
-     */
+    // ============================================================
+    // UPDATE QUANTITY
+    // ============================================================
     @PutMapping("/{customerId}/{productId}")
     public CartDTO updateQuantity(
 
@@ -86,6 +62,18 @@ public class CartController {
             )
             Long flavourId) {
 
+        /*
+         * IMPORTANT:
+         *
+         * CartService expects:
+         *
+         * customerId,
+         * productId,
+         * flavourId,
+         * quantity
+         *
+         * So flavourId MUST come before quantity.
+         */
         return cartService.updateQuantity(
                 customerId,
                 productId,
@@ -95,11 +83,9 @@ public class CartController {
     }
 
 
-    /*
-     * ============================================================
-     * REMOVE PRODUCT
-     * ============================================================
-     */
+    // ============================================================
+    // REMOVE PRODUCT / FLAVOUR
+    // ============================================================
     @DeleteMapping("/{customerId}/{productId}")
     public CartDTO removeFromCart(
 
@@ -118,4 +104,18 @@ public class CartController {
                 flavourId
         );
     }
+
+
+    // ============================================================
+    // CLEAR CART
+    // ============================================================
+    @DeleteMapping("/{customerId}/clear")
+    public void clearCart(
+            @PathVariable String customerId) {
+
+        cartService.clearCart(
+                customerId
+        );
+    }
+
 }

@@ -14,14 +14,12 @@ interface ProductQuickViewProps {
 
   product: Product | null;
 
+  initialFlavourId?: number;
+
   isOpen: boolean;
 
   onClose: () => void;
 
-  /*
-   * Selected flavour ID is now passed to
-   * the cart system.
-   */
   onAddToCart: (
     productId: number,
     flavourId?: number
@@ -34,6 +32,8 @@ interface ProductQuickViewProps {
 export default function ProductQuickView({
 
   product,
+
+  initialFlavourId,
 
   isOpen,
 
@@ -67,35 +67,27 @@ export default function ProductQuickView({
   const availableWeights = useMemo(() => {
 
     if (!product?.flavours) {
-
       return [];
-
     }
 
 
     return Array.from(
-
       new Set(
-
         product.flavours
-
           .map(
             (flavour) =>
               flavour.weight
           )
-
           .filter(
             (
               weight
             ): weight is string =>
               Boolean(weight)
           )
-
       )
-
     );
 
-  }, [product]);
+  }, [product, initialFlavourId]);
 
 
   /*
@@ -111,18 +103,36 @@ export default function ProductQuickView({
       product.flavours.length > 0
     ) {
 
+      const requestedFlavour =
+        initialFlavourId != null
+          ? product.flavours.find(
+              (flavour) =>
+                flavour.id ===
+                initialFlavourId
+            )
+          : undefined;
+
 
       const firstFlavour =
         product.flavours.find(
           (flavour) =>
-            Boolean(
-              flavour.weight
-            )
+            Boolean(flavour.weight)
         );
 
 
+      /*
+       * Products such as Pre-Workout have
+       * flavour variants without a weight.
+       */
+
+      const firstAvailableFlavour =
+        requestedFlavour ??
+        firstFlavour ??
+        product.flavours[0];
+
+
       const firstWeight =
-        firstFlavour?.weight ??
+        firstAvailableFlavour?.weight ??
         null;
 
 
@@ -132,26 +142,22 @@ export default function ProductQuickView({
 
 
       setSelectedFlavourId(
-        firstFlavour?.id ??
+        firstAvailableFlavour?.id ??
         null
       );
 
-
     } else {
-
 
       setSelectedWeight(
         null
       );
 
-
       setSelectedFlavourId(
         null
       );
-
     }
 
-  }, [product]);
+  }, [product, initialFlavourId]);
 
 
   /*
@@ -163,13 +169,20 @@ export default function ProductQuickView({
   const flavoursForSelectedWeight =
     useMemo(() => {
 
-      if (
-        !product?.flavours ||
-        !selectedWeight
-      ) {
-
+      if (!product?.flavours) {
         return [];
+      }
 
+
+      /*
+       * If this product has no weight variants,
+       * return all flavours.
+       *
+       * This is used for Pre-Workout.
+       */
+
+      if (!selectedWeight) {
+        return product.flavours;
       }
 
 
@@ -195,6 +208,66 @@ export default function ProductQuickView({
     flavour: ProductFlavour
   ): string => {
 
+    const flavourName =
+      flavour.flavourName || "";
+
+    const name =
+      flavourName.trim().toLowerCase();
+
+    /*
+     * ============================================================
+     * PRE-WORKOUT FLAVOUR NAMES
+     *
+     * Buttons show only the variant name.
+     * ============================================================
+     */
+
+    if (name.includes("neon venom")) {
+      return "Neon Venom";
+    }
+
+    if (name.includes("midnight fizz")) {
+      return "Midnight Fizz";
+    }
+
+    if (name.includes("frozen ghost")) {
+      return "Frozen Ghost";
+    }
+
+    if (name.includes("spirit colada")) {
+      return "Spirit Colada";
+    }
+
+    if (name.includes("toxic fusion")) {
+      return "Toxic Fusion";
+    }
+
+    if (name.includes("blue venom")) {
+      return "Blue Venom";
+    }
+
+    /*
+     * ============================================================
+     * EAA + ELECTROLYTES FLAVOUR NAMES
+     * ============================================================
+     */
+
+    if (name.includes("toxic fusion")) {
+      return "Toxic Fusion";
+    }
+
+    if (name.includes("spirit colada")) {
+      return "Spirit Colada";
+    }
+
+    /*
+     * ============================================================
+     * EXISTING PROTEIN MATRIX-ISO MAPPINGS
+     *
+     * Keep these unchanged.
+     * ============================================================
+     */
+
     switch (flavour.id) {
 
       case 1:
@@ -216,10 +289,86 @@ export default function ProductQuickView({
         return "Mango";
 
       default:
-        return flavour.flavourName;
+        return flavourName;
+    }
+  };
 
+
+  /*
+   * ============================================================
+   * SELECTED PRE-WORKOUT TASTE
+   *
+   * The flavour buttons show the variant name, while the
+   * "Selected Flavour" row shows the corresponding taste.
+   * ============================================================
+   */
+
+  const getSelectedFlavourTaste = (
+    flavour: ProductFlavour
+  ): string => {
+
+    const name =
+      (flavour.flavourName || "")
+        .trim()
+        .toLowerCase();
+
+    if (
+      product?.id === 4 &&
+      name.includes("toxic fusion")
+    ) {
+      return "Strawberry Kiwi";
     }
 
+    if (
+      product?.id === 4 &&
+      name.includes("spirit colada")
+    ) {
+      return "Pina Colada";
+    }
+
+    if (
+      product?.id === 1 &&
+      name.includes("neon venom")
+    ) {
+      return "Citrus Lemon";
+    }
+
+    if (
+      product?.id === 1 &&
+      name.includes("midnight fizz")
+    ) {
+      return "Cola";
+    }
+
+    if (
+      product?.id === 2 &&
+      name.includes("frozen ghost")
+    ) {
+      return "Apple Mint";
+    }
+
+    if (
+      product?.id === 2 &&
+      name.includes("spirit colada")
+    ) {
+      return "Pina Colada";
+    }
+
+    if (
+      product?.id === 3 &&
+      name.includes("toxic fusion")
+    ) {
+      return "Peach Mango";
+    }
+
+    if (
+      product?.id === 3 &&
+      name.includes("blue venom")
+    ) {
+      return "Blueberry";
+    }
+
+    return getDisplayFlavourName(flavour);
   };
 
 
@@ -249,7 +398,6 @@ export default function ProductQuickView({
     weight: string
   ) => {
 
-
     setSelectedWeight(
       weight
     );
@@ -267,7 +415,6 @@ export default function ProductQuickView({
       firstFlavour?.id ??
       null
     );
-
   };
 
 
@@ -284,20 +431,159 @@ export default function ProductQuickView({
     setSelectedFlavourId(
       flavourId
     );
-
   };
 
 
   /*
    * ============================================================
-   * IMAGE MAPPING
+   * PRE-WORKOUT IMAGE MAPPING
    * ============================================================
    */
 
-  const getFlavourImages = (
-    flavour: ProductFlavour
-  ): string[] => {
+  const getPreWorkoutFlavourImages = (
+    productId: number,
+    flavourName: string
+  ): string[] | null => {
 
+    const name =
+      flavourName
+        .trim()
+        .toLowerCase();
+
+
+    /*
+     * BLOOD RUSH
+     *
+     * Neon Venom — Citrus Lemon
+     * images 1,2,3
+     */
+
+    if (
+      productId === 1 &&
+      name.includes("neon venom")
+    ) {
+
+      return [
+        "/products/pre-workout/1.png",
+        "/products/pre-workout/2.png",
+        "/products/pre-workout/3.png",
+      ];
+    }
+
+
+    /*
+     * BLOOD RUSH
+     *
+     * Midnight Fizz — Cola
+     * images 4,5,6
+     */
+
+    if (
+      productId === 1 &&
+      name.includes("midnight fizz")
+    ) {
+
+      return [
+        "/products/pre-workout/4.png",
+        "/products/pre-workout/5.png",
+        "/products/pre-workout/6.png",
+      ];
+    }
+
+
+    /*
+     * BURN SYNDICATE
+     *
+     * Frozen Ghost — Apple Mint
+     * images 7,8,9
+     */
+
+    if (
+      productId === 2 &&
+      name.includes("frozen ghost")
+    ) {
+
+      return [
+        "/products/Non-stim preworkout/13.png",
+                "/products/Non-stim preworkout/14.png",
+                "/products/Non-stim preworkout/15.png",
+      ];
+    }
+
+
+    /*
+     * BURN SYNDICATE
+     *
+     * Spirit Colada — Pina Colada
+     * images 10,11,12
+     */
+
+    if (
+      productId === 2 &&
+      name.includes("spirit colada")
+    ) {
+
+      return [
+        "/products/Non-stim preworkout/16.png",
+                "/products/Non-stim preworkout/17.png",
+                "/products/Non-stim preworkout/18.png",
+      ];
+    }
+
+
+    /*
+     * DEVIL'S PUMP
+     *
+     * Toxic Fusion — Peach Mango
+     * images 13,14,15
+     */
+
+    if (
+      productId === 3 &&
+      name.includes("toxic fusion")
+    ) {
+
+      return [
+       "/products/Fat-burner/7.png",
+               "/products/Fat-burner/8.png",
+               "/products/Fat-burner/9.png",
+      ];
+    }
+
+
+    /*
+     * DEVIL'S PUMP
+     *
+     * Blue Venom — Blueberry
+     * images 16,17,18
+     */
+
+    if (
+      productId === 3 &&
+      name.includes("blue venom")
+    ) {
+
+      return [
+                "/products/Fat-burner/10.png",
+                "/products/Fat-burner/11.png",
+                "/products/Fat-burner/12.png",
+      ];
+    }
+
+
+    return null;
+  };
+
+
+  /*
+   * ============================================================
+   * PROTEIN IMAGE MAPPING
+   * ============================================================
+   */
+
+  const getProteinFlavourImages = (
+    flavour: ProductFlavour
+  ): string[] | null => {
 
     const weight =
       flavour.weight
@@ -327,7 +613,6 @@ export default function ProductQuickView({
         "/products/protein/26.png",
         "/products/protein/27.png",
       ];
-
     }
 
 
@@ -345,7 +630,6 @@ export default function ProductQuickView({
         "/products/protein coffee/29.png",
         "/products/protein coffee/30.png",
       ];
-
     }
 
 
@@ -363,7 +647,6 @@ export default function ProductQuickView({
         "/products/protein balgain/32.png",
         "/products/protein balgain/33.png",
       ];
-
     }
 
 
@@ -381,7 +664,6 @@ export default function ProductQuickView({
         "/products/protein 2kg/38.png",
         "/products/protein 2kg/39.png",
       ];
-
     }
 
 
@@ -399,7 +681,6 @@ export default function ProductQuickView({
         "/products/protein2kgcofees/41.png",
         "/products/protein2kgcofees/42.png",
       ];
-
     }
 
 
@@ -417,12 +698,108 @@ export default function ProductQuickView({
         "/products/protein 2kg coffee/35.png",
         "/products/protein 2kg coffee/36.png",
       ];
+    }
 
+
+    return null;
+  };
+
+
+  /*
+   * ============================================================
+   * IMAGE MAPPING
+   * ============================================================
+   */
+
+  const getFlavourImages = (
+    flavour: ProductFlavour
+  ): string[] => {
+
+    /*
+     * Pre-Workout images.
+     */
+
+    if (
+      product &&
+      (
+        product.id === 1 ||
+        product.id === 2 ||
+        product.id === 3
+      )
+    ) {
+
+      const preWorkoutImages =
+        getPreWorkoutFlavourImages(
+          product.id,
+          flavour.flavourName
+        );
+
+
+      if (preWorkoutImages) {
+        return preWorkoutImages;
+      }
     }
 
 
     /*
-     * BACKEND FALLBACK
+     * EAA + Electrolytes images.
+     */
+
+    if (
+      product &&
+      product.id === 4
+    ) {
+
+      const name =
+        flavour.flavourName
+          .trim()
+          .toLowerCase();
+
+      if (name.includes("toxic fusion")) {
+
+        return [
+          "/products/EAA electrolyte/19.png",
+          "/products/EAA electrolyte/20.png",
+          "/products/EAA electrolyte/21.png",
+        ];
+
+      }
+
+      if (name.includes("spirit colada")) {
+
+        return [
+          "/products/EAA electrolyte/22.png",
+          "/products/EAA electrolyte/23.png",
+          "/products/EAA electrolyte/24.png",
+        ];
+
+      }
+    }
+
+
+    /*
+     * Protein Matrix-ISO images.
+     */
+
+    if (
+      product &&
+      product.id === 5
+    ) {
+
+      const proteinImages =
+        getProteinFlavourImages(
+          flavour
+        );
+
+
+      if (proteinImages) {
+        return proteinImages;
+      }
+    }
+
+
+    /*
+     * Backend fallback.
      */
 
     if (
@@ -431,12 +808,10 @@ export default function ProductQuickView({
     ) {
 
       return flavour.images;
-
     }
 
 
     return product?.images ?? [];
-
   };
 
 
@@ -452,7 +827,6 @@ export default function ProductQuickView({
   ) {
 
     return null;
-
   }
 
 
@@ -507,20 +881,9 @@ export default function ProductQuickView({
    * ============================================================
    * ADD SELECTED VARIANT
    * ============================================================
-   *
-   * THIS IS THE IMPORTANT CHANGE.
-   *
-   * Protein Matrix-ISO:
-   *
-   * product.id
-   * +
-   * selectedFlavour.id
-   *
-   * are sent to the backend.
    */
 
   const handleAdd = () => {
-
 
     if (
       selectedFlavourId !== null
@@ -533,16 +896,10 @@ export default function ProductQuickView({
 
     } else {
 
-      /*
-       * Normal products such as
-       * Pre-Workout / EAA.
-       */
       onAddToCart(
         product.id
       );
-
     }
-
   };
 
 
@@ -560,15 +917,12 @@ export default function ProductQuickView({
         justify-center
         p-4
       "
-
       onClick={onClose}
     >
-
 
       {/* CLOSE BUTTON */}
 
       <button
-
         onClick={(e) => {
 
           e.stopPropagation();
@@ -576,7 +930,6 @@ export default function ProductQuickView({
           onClose();
 
         }}
-
         className="
           fixed
           top-6
@@ -591,19 +944,16 @@ export default function ProductQuickView({
           shadow-lg
         "
       >
-
         <X
           className="text-white"
           size={24}
         />
-
       </button>
 
 
       {/* MODAL */}
 
       <div
-
         className="
           relative
           w-full
@@ -616,12 +966,10 @@ export default function ProductQuickView({
           border-white/10
           shadow-2xl
         "
-
         onClick={(e) =>
           e.stopPropagation()
         }
       >
-
 
         <div
           className="
@@ -632,15 +980,12 @@ export default function ProductQuickView({
           "
         >
 
-
           {/* LEFT */}
 
           <div>
 
             <ProductCarousel
-
               images={displayImages}
-
               productName={
                 selectedFlavour
                   ? `${product.name} ${getDisplayFlavourName(
@@ -648,7 +993,6 @@ export default function ProductQuickView({
                     )}`
                   : product.name
               }
-
             />
 
           </div>
@@ -663,7 +1007,6 @@ export default function ProductQuickView({
               justify-center
             "
           >
-
 
             {/* BADGE */}
 
@@ -685,9 +1028,7 @@ export default function ProductQuickView({
                   w-fit
                 "
               >
-
                 {product.badge}
-
               </span>
 
             )}
@@ -703,9 +1044,7 @@ export default function ProductQuickView({
                 mb-6
               "
             >
-
               {product.name}
-
             </h2>
 
 
@@ -722,11 +1061,8 @@ export default function ProductQuickView({
                     mb-3
                   "
                 >
-
                   Weight
-
                 </h3>
-
 
                 <div
                   className="
@@ -740,17 +1076,13 @@ export default function ProductQuickView({
                     (weight) => (
 
                       <button
-
                         key={weight}
-
                         type="button"
-
                         onClick={() =>
                           handleWeightChange(
                             weight
                           )
                         }
-
                         className={`
                           px-5
                           py-2.5
@@ -782,9 +1114,7 @@ export default function ProductQuickView({
                           }
                         `}
                       >
-
                         {weight}
-
                       </button>
 
                     )
@@ -811,9 +1141,7 @@ export default function ProductQuickView({
                     mb-3
                   "
                 >
-
                   Flavour
-
                 </h3>
 
 
@@ -829,17 +1157,13 @@ export default function ProductQuickView({
                     (flavour) => (
 
                       <button
-
                         key={flavour.id}
-
                         type="button"
-
                         onClick={() =>
                           handleFlavourChange(
                             flavour.id
                           )
                         }
-
                         className={`
                           px-5
                           py-2.5
@@ -871,11 +1195,9 @@ export default function ProductQuickView({
                           }
                         `}
                       >
-
                         {getDisplayFlavourName(
                           flavour
                         )}
-
                       </button>
 
                     )
@@ -898,14 +1220,12 @@ export default function ProductQuickView({
                 mb-6
               "
             >
-
               ₹
               {Number(
                 displayPrice
               ).toLocaleString(
                 "en-IN"
               )}
-
             </p>
 
 
@@ -920,11 +1240,8 @@ export default function ProductQuickView({
                   mb-2
                 "
               >
-
                 Product Description
-
               </h3>
-
 
               <p
                 className="
@@ -932,9 +1249,7 @@ export default function ProductQuickView({
                   leading-8
                 "
               >
-
                 {displayDescription}
-
               </p>
 
             </div>
@@ -948,7 +1263,6 @@ export default function ProductQuickView({
                 mb-8
               "
             >
-
 
               {/* CATEGORY */}
 
@@ -965,11 +1279,8 @@ export default function ProductQuickView({
                 <span
                   className="text-white/60"
                 >
-
                   Category
-
                 </span>
-
 
                 <span
                   className="
@@ -977,9 +1288,7 @@ export default function ProductQuickView({
                     capitalize
                   "
                 >
-
                   {product.category}
-
                 </span>
 
               </div>
@@ -1002,18 +1311,13 @@ export default function ProductQuickView({
                   <span
                     className="text-white/60"
                   >
-
                     Weight
-
                   </span>
-
 
                   <span
                     className="text-white"
                   >
-
                     {selectedFlavour.weight}
-
                   </span>
 
                 </div>
@@ -1038,20 +1342,18 @@ export default function ProductQuickView({
                   <span
                     className="text-white/60"
                   >
-
                     Selected Flavour
-
                   </span>
 
-
                   <span
-                    className="text-white"
+                    className="
+                      text-white
+                      text-right
+                    "
                   >
-
-                    {getDisplayFlavourName(
-                      selectedFlavour
-                    )}
-
+                    {getDisplayFlavourName(selectedFlavour)} (
+                      {getSelectedFlavourTaste(selectedFlavour)}
+                    )
                   </span>
 
                 </div>
@@ -1074,11 +1376,8 @@ export default function ProductQuickView({
                 <span
                   className="text-white/60"
                 >
-
                   Availability
-
                 </span>
-
 
                 <span
                   className={
@@ -1087,11 +1386,9 @@ export default function ProductQuickView({
                       : "text-red-400"
                   }
                 >
-
                   {displayInStock
                     ? "In Stock"
                     : "Out of Stock"}
-
                 </span>
 
               </div>
@@ -1102,15 +1399,12 @@ export default function ProductQuickView({
             {/* ADD TO CART */}
 
             <button
-
               disabled={
                 !displayInStock ||
                 addingProductId ===
                   product.id
               }
-
               onClick={handleAdd}
-
               className="
                 flex
                 items-center
@@ -1133,7 +1427,6 @@ export default function ProductQuickView({
                 size={20}
               />
 
-
               {addingProductId ===
               product.id
                 ? "Adding..."
@@ -1152,5 +1445,4 @@ export default function ProductQuickView({
     document.body
 
   );
-
 }

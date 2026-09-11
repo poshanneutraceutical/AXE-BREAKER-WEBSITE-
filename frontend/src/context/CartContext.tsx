@@ -27,12 +27,14 @@ interface CartContextType {
     ) => Promise<void>;
 
     removeItem: (
-        productId: number
+        productId: number,
+        flavourId?: number
     ) => Promise<void>;
 
     updateQuantity: (
         productId: number,
-        quantity: number
+        quantity: number,
+        flavourId?: number
     ) => Promise<void>;
 
     refreshCart: () => Promise<void>;
@@ -87,7 +89,13 @@ export const CartProvider = ({
             setCart(data);
 
 
-        } catch {
+        } catch (error) {
+
+            console.error(
+                "Failed to load cart:",
+                error
+            );
+
 
             setCart(null);
 
@@ -133,14 +141,13 @@ export const CartProvider = ({
                     productId,
 
                     /*
-                     * Send selected flavour only
-                     * when one is selected.
+                     * Send the real selected
+                     * ProductFlavour ID.
                      */
-                    ...(flavourId !== undefined
-                        ? {
-                            flavourId
-                        }
-                        : {}),
+                    flavourId:
+                        flavourId !== undefined
+                            ? flavourId
+                            : null,
 
                     quantity,
 
@@ -164,7 +171,8 @@ export const CartProvider = ({
     // Remove Product
     // ============================================================
     const removeItem = async (
-        productId: number
+        productId: number,
+        flavourId?: number
     ) => {
 
 
@@ -177,7 +185,8 @@ export const CartProvider = ({
             const data =
                 await cartService.removeItem(
                     CUSTOMER_ID,
-                    productId
+                    productId,
+                    flavourId
                 );
 
 
@@ -199,8 +208,24 @@ export const CartProvider = ({
     // ============================================================
     const updateQuantity = async (
         productId: number,
-        quantity: number
+        quantity: number,
+        flavourId?: number
     ) => {
+
+
+        /*
+         * Quantity 0 means remove this item.
+         */
+        if (quantity <= 0) {
+
+            await removeItem(
+                productId,
+                flavourId
+            );
+
+            return;
+
+        }
 
 
         setLoading(true);
@@ -213,7 +238,8 @@ export const CartProvider = ({
                 await cartService.updateQuantity(
                     CUSTOMER_ID,
                     productId,
-                    quantity
+                    quantity,
+                    flavourId
                 );
 
 
@@ -236,35 +262,30 @@ export const CartProvider = ({
     const clearCart = async () => {
 
 
+        setLoading(true);
+
+
         try {
 
 
-            if (cartService.clearCart) {
-
-                await cartService.clearCart(
-                    CUSTOMER_ID
-                );
-
-            }
-
-
-        } catch (err) {
-
-
-            console.log(
-                "Backend clearCart unavailable",
-                err
+            await cartService.clearCart(
+                CUSTOMER_ID
             );
 
+
+            setCart(null);
+
+
+            localStorage.removeItem(
+                "cart"
+            );
+
+
+        } finally {
+
+            setLoading(false);
+
         }
-
-
-        setCart(null);
-
-
-        localStorage.removeItem(
-            "cart"
-        );
 
     };
 

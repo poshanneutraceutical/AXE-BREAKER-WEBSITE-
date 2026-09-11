@@ -39,7 +39,7 @@ public class CartService {
     public CartDTO addToCart(AddToCartRequest request) {
 
         /*
-         * Find parent product
+         * Find parent product.
          */
         Product product =
                 productRepository.findById(
@@ -84,7 +84,9 @@ public class CartService {
                             selectedFlavour.getProduct().getId() == null ||
                             !selectedFlavour.getProduct()
                                     .getId()
-                                    .equals(product.getId())
+                                    .equals(
+                                            product.getId()
+                                    )
             ) {
 
                 throw new IllegalArgumentException(
@@ -97,13 +99,7 @@ public class CartService {
 
 
         /*
-         * Determine exact price.
-         *
-         * Variant:
-         *     ProductFlavour.price
-         *
-         * Normal product:
-         *     Product.price
+         * Determine exact item price.
          */
         BigDecimal itemPrice =
                 selectedFlavour != null
@@ -137,53 +133,49 @@ public class CartService {
                             return cartRepository.save(
                                     newCart
                             );
+
                         });
 
 
         /*
-         * Find existing cart item.
-         *
-         * Product + flavour must match.
-         *
-         * This allows:
-         *
-         * Protein Matrix-ISO
-         * 1 KG Mango
-         *
-         * and
-         *
-         * Protein Matrix-ISO
-         * 2 KG Coffee
-         *
-         * to exist as separate cart items.
-         */
-        /*
          * Make selected flavour effectively final
-         * before using it inside the lambda.
+         * for the stream below.
          */
         final ProductFlavour finalSelectedFlavour =
                 selectedFlavour;
 
 
+        /*
+         * Find existing cart item using:
+         *
+         *     product ID + flavour ID
+         *
+         * This is important because the same parent
+         * product can have multiple different flavours.
+         */
         Optional<CartItem> existingItem =
                 cart.getItems()
                         .stream()
                         .filter(item -> {
 
                             /*
-                             * Product must match
+                             * Product must match.
                              */
                             if (
                                     !item.getProduct()
                                             .getId()
-                                            .equals(product.getId())
+                                            .equals(
+                                                    product.getId()
+                                            )
                             ) {
+
                                 return false;
+
                             }
 
 
                             /*
-                             * Existing cart flavour
+                             * Existing flavour ID.
                              */
                             Long existingFlavourId =
                                     item.getFlavour() != null
@@ -192,11 +184,7 @@ public class CartService {
 
 
                             /*
-                             * New selected flavour
-                             *
-                             * IMPORTANT:
-                             * Use finalSelectedFlavour here,
-                             * NOT selectedFlavour.
+                             * New flavour ID.
                              */
                             Long newFlavourId =
                                     finalSelectedFlavour != null
@@ -205,29 +193,34 @@ public class CartService {
 
 
                             /*
-                             * Both are normal products
+                             * Both normal products.
                              */
                             if (
                                     existingFlavourId == null &&
                                             newFlavourId == null
                             ) {
+
                                 return true;
+
                             }
 
 
                             /*
-                             * One has flavour and the other doesn't
+                             * One variant and one normal
+                             * product are different items.
                              */
                             if (
                                     existingFlavourId == null ||
                                             newFlavourId == null
                             ) {
+
                                 return false;
+
                             }
 
 
                             /*
-                             * Same product + same flavour
+                             * Same product + same flavour.
                              */
                             return existingFlavourId.equals(
                                     newFlavourId
@@ -235,6 +228,7 @@ public class CartService {
 
                         })
                         .findFirst();
+
 
         /*
          * ========================================================
@@ -300,16 +294,17 @@ public class CartService {
         }
 
 
-        /*
-         * Recalculate complete cart total.
-         */
         calculateTotal(cart);
 
 
-        cartRepository.save(cart);
+        cartRepository.save(
+                cart
+        );
 
 
-        return convertToDTO(cart);
+        return convertToDTO(
+                cart
+        );
 
     }
 
@@ -328,26 +323,34 @@ public class CartService {
                         .findByCustomerId(
                                 customerId
                         )
-                        .orElseThrow(() ->
-                                new EntityNotFoundException(
-                                        "Cart not found"
-                                )
+                        .orElseGet(() ->
+
+                                Cart.builder()
+                                        .customerId(
+                                                customerId
+                                        )
+                                        .items(
+                                                new ArrayList<>()
+                                        )
+                                        .totalAmount(
+                                                BigDecimal.ZERO
+                                        )
+                                        .build()
+
                         );
 
 
         /*
-         * Recalculate using CURRENT prices.
-         *
-         * This is important if a product price was
-         * changed after an item was added to cart.
+         * Always calculate current totals.
          */
-        calculateTotal(cart);
+        calculateTotal(
+                cart
+        );
 
 
-        cartRepository.save(cart);
-
-
-        return convertToDTO(cart);
+        return convertToDTO(
+                cart
+        );
 
     }
 
@@ -356,19 +359,15 @@ public class CartService {
      * ============================================================
      * REMOVE FROM CART
      * ============================================================
-     *
-     * flavourId is optional.
-     *
-     * Normal product:
-     *     flavourId = null
-     *
-     * Variant product:
-     *     flavourId = selected flavour ID
      */
     public CartDTO removeFromCart(
+
             String customerId,
+
             Long productId,
+
             Long flavourId
+
     ) {
 
         Cart cart =
@@ -384,42 +383,43 @@ public class CartService {
 
 
         /*
-         * Remove only the matching product + flavour.
+         * Remove the exact selected variant when
+         * flavourId is supplied.
+         *
+         * If flavourId is not supplied, remove ALL
+         * items belonging to that parent product.
+         *
+         * This is important for the existing cart page,
+         * which currently sends productId only.
          */
         cart.getItems().removeIf(item -> {
 
-            /*
-             * Product must match.
-             */
             if (
                     !item.getProduct()
                             .getId()
-                            .equals(productId)
+                            .equals(
+                                    productId
+                            )
             ) {
+
                 return false;
+
             }
 
 
-            /*
-             * Existing flavour ID.
-             */
+            if (flavourId == null) {
+
+                return true;
+
+            }
+
+
             Long existingFlavourId =
                     item.getFlavour() != null
                             ? item.getFlavour().getId()
                             : null;
 
 
-            /*
-             * Normal product.
-             */
-            if (flavourId == null) {
-                return existingFlavourId == null;
-            }
-
-
-            /*
-             * Variant product.
-             */
             return flavourId.equals(
                     existingFlavourId
             );
@@ -427,16 +427,19 @@ public class CartService {
         });
 
 
-        /*
-         * Recalculate total.
-         */
-        calculateTotal(cart);
+        calculateTotal(
+                cart
+        );
 
 
-        cartRepository.save(cart);
+        cartRepository.save(
+                cart
+        );
 
 
-        return convertToDTO(cart);
+        return convertToDTO(
+                cart
+        );
 
     }
 
@@ -445,23 +448,32 @@ public class CartService {
      * ============================================================
      * UPDATE QUANTITY
      * ============================================================
-     *
-     * flavourId is optional.
      */
     public CartDTO updateQuantity(
+
             String customerId,
+
             Long productId,
+
             Long flavourId,
+
             Integer quantity
+
     ) {
 
         /*
-         * Quantity must be positive.
+         * Quantity 0 or below removes the requested
+         * cart item.
          */
-        if (quantity == null || quantity < 1) {
+        if (
+                quantity == null ||
+                        quantity <= 0
+        ) {
 
-            throw new IllegalArgumentException(
-                    "Quantity must be at least 1"
+            return removeFromCart(
+                    customerId,
+                    productId,
+                    flavourId
             );
 
         }
@@ -480,17 +492,14 @@ public class CartService {
 
 
         /*
-         * Find exact cart item using
-         * product + flavour.
+         * Find exact product + flavour when
+         * flavourId is provided.
          */
         CartItem item =
                 cart.getItems()
                         .stream()
                         .filter(i -> {
 
-                            /*
-                             * Product must match.
-                             */
                             if (
                                     !i.getProduct()
                                             .getId()
@@ -498,32 +507,32 @@ public class CartService {
                                                     productId
                                             )
                             ) {
+
                                 return false;
+
                             }
 
 
                             /*
-                             * Existing flavour ID.
+                             * Existing cart behaviour:
+                             * when no flavour ID is supplied,
+                             * use the first matching item.
                              */
+                            if (
+                                    flavourId == null
+                            ) {
+
+                                return true;
+
+                            }
+
+
                             Long existingFlavourId =
                                     i.getFlavour() != null
                                             ? i.getFlavour().getId()
                                             : null;
 
 
-                            /*
-                             * Normal product.
-                             */
-                            if (flavourId == null) {
-
-                                return existingFlavourId == null;
-
-                            }
-
-
-                            /*
-                             * Variant product.
-                             */
                             return flavourId.equals(
                                     existingFlavourId
                             );
@@ -537,20 +546,13 @@ public class CartService {
                         );
 
 
-        /*
-         * Update quantity.
-         */
-        item.setQuantity(quantity);
+        item.setQuantity(
+                quantity
+        );
 
 
         /*
-         * Get CURRENT exact price.
-         *
-         * Variant:
-         *     flavour.price
-         *
-         * Normal:
-         *     product.price
+         * Use exact current variant price.
          */
         BigDecimal itemPrice =
                 item.getFlavour() != null
@@ -558,9 +560,6 @@ public class CartService {
                         : item.getProduct().getPrice();
 
 
-        /*
-         * Recalculate subtotal.
-         */
         item.setSubtotal(
                 itemPrice.multiply(
                         BigDecimal.valueOf(
@@ -570,16 +569,58 @@ public class CartService {
         );
 
 
-        /*
-         * Recalculate complete cart.
-         */
-        calculateTotal(cart);
+        calculateTotal(
+                cart
+        );
 
 
-        cartRepository.save(cart);
+        cartRepository.save(
+                cart
+        );
 
 
-        return convertToDTO(cart);
+        return convertToDTO(
+                cart
+        );
+
+    }
+
+
+    /*
+     * ============================================================
+     * CLEAR CART
+     * ============================================================
+     */
+    public void clearCart(
+            String customerId
+    ) {
+
+        Cart cart =
+                cartRepository
+                        .findByCustomerId(
+                                customerId
+                        )
+                        .orElse(null);
+
+
+        if (cart == null) {
+
+            return;
+
+        }
+
+
+        cart.getItems().clear();
+
+
+        cart.setTotalAmount(
+                BigDecimal.ZERO
+        );
+
+
+        cartRepository.save(
+                cart
+        );
 
     }
 
@@ -588,8 +629,6 @@ public class CartService {
      * ============================================================
      * CALCULATE TOTAL
      * ============================================================
-     *
-     * Always calculates using the CURRENT price.
      */
     private void calculateTotal(
             Cart cart
@@ -605,7 +644,8 @@ public class CartService {
         ) {
 
             /*
-             * Current exact price.
+             * Variant price takes priority over
+             * parent product price.
              */
             BigDecimal itemPrice =
                     item.getFlavour() != null
@@ -613,9 +653,6 @@ public class CartService {
                             : item.getProduct().getPrice();
 
 
-            /*
-             * Recalculate subtotal.
-             */
             item.setSubtotal(
                     itemPrice.multiply(
                             BigDecimal.valueOf(
@@ -625,9 +662,6 @@ public class CartService {
             );
 
 
-            /*
-             * Add to cart total.
-             */
             total =
                     total.add(
                             item.getSubtotal()
@@ -636,7 +670,9 @@ public class CartService {
         }
 
 
-        cart.setTotalAmount(total);
+        cart.setTotalAmount(
+                total
+        );
 
     }
 
@@ -673,9 +709,6 @@ public class CartService {
                                             item.getFlavour();
 
 
-                                    /*
-                                     * Exact current price.
-                                     */
                                     BigDecimal price =
                                             flavour != null
                                                     ? flavour.getPrice()
