@@ -114,7 +114,7 @@ const VerifyPage = () => {
               overflowWrap: 'break-word'
             }}
           >
-            X AXE BREAKER
+             AXE BREAKER
           </h1>
 
           <p
