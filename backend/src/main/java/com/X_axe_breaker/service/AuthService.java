@@ -25,6 +25,6 @@ public class AuthService {
         }
 
         return new VerifyResponse("valid", "Success!\n" +
-                "Congratulations! Your Ghost Strength product has been successfully verified and confirmed as 100% genuine. Thank you for choosing Ghost Strength. Train Hard. Stay Authentic.");
+                "Congratulations! Your Axe Breaker Strength product has been successfully verified and confirmed as 100% genuine. Thank you for choosing Axe Breaker. Train Hard. Stay Authentic.");
     }
 }
